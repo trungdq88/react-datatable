@@ -4,8 +4,8 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import FriendlyLoader from '../view/FriendlyLoader.js';
-import entityInfo from '../../business/entity-info.js';
+import FriendlyLoader from './FriendlyLoader.js';
+import entityInfo from './utils/entity-info.js';
 
 /**
  * Usage

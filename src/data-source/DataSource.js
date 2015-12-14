@@ -1,7 +1,7 @@
+import EventEmitter from 'event-emitter';
 /**
  * Created by dinhquangtrung on 10/2/15.
  */
-const MicroEvent = window.MicroEvent;
 /**
  * Abstract class
  * Contains:
@@ -12,8 +12,7 @@ export default class DataSource {
   constructor(name) {
     this.name = name;
     this.data = [];
-    this.event = {};
-    MicroEvent.mixin(this);
+    this.event = EventEmitter({});
   }
 
   /**
@@ -44,4 +43,24 @@ export default class DataSource {
     return this.data;
   }
 
+  /**
+   * Bind event for data source
+   */
+  bind() {
+    this.event.on.apply(this.event, arguments);
+  }
+
+  /**
+   * Unbind event
+   */
+  unbind() {
+    this.event.off.apply(this.event, arguments);
+  }
+
+  /**
+   * Trigger events
+   */
+  trigger() {
+    this.event.emit.apply(this.event, arguments);
+  }
 }

@@ -1,6 +1,6 @@
 import DataSource from './DataSource.js';
-import api from '../../utils/api.js';
-import entityInfo from '../../business/entity-info.js';
+import api from '../utils/api.js';
+import entityInfo from '../utils/entity-info.js';
 
 /**
  * Data source from entity APIs

@@ -42,6 +42,9 @@ export default {
      * to user to identify entities?
      */
     valueField: 'name',
+    /**
+     * Fields that display in data table
+     */
     listFields: [
     /**
      * ['Label', 'propertyNameOrTransformObject', noSort: Boolean, filterArrayValue]

@@ -1,5 +1,5 @@
 import DataSource from './DataSource.js';
-import entityInfo from '../../business/entity-info.js';
+import entityInfo from '../utils/entity-info.js';
 
 /**
  * Data source for entity with existing data
