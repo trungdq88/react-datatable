@@ -246,9 +246,15 @@ export default class DataTable extends React.Component {
     );
   }
 
+  /**
+   * Main render method.
+   * @returns {XML}
+   */
   render() {
+    // Get all fields to be displayed from data source
     const fields = this.dataSource.getFields();
 
+    // Generate all items as rows
     const items = this.state.entities.map((entity, rowIndex) => {
       const values = fields.map((row, cellIndex) => {
         const propertyObject = row[1]; // either a string or transform object
@@ -274,6 +280,7 @@ export default class DataTable extends React.Component {
       );
     });
 
+    // Generate header, including sort, filter button if needed
     const headings = fields.map((row, index) => {
       const heading = row[0];
       const property = typeof row[1] === 'string' ? row[1] : row[1].field;
@@ -339,6 +346,7 @@ export default class DataTable extends React.Component {
       );
     });
 
+    // Build the table and return to `render` method
     return (
       <div>
         <div className="row">
