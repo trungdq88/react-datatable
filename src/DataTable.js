@@ -197,7 +197,11 @@ export default class DataTable extends React.Component {
 
   renderPaging() {
     const pageElements = [];
-    const totalPage = Math.ceil(this.state.total / this.state.perpage);
+
+    // If the data source has no information about total page, we always display
+    // one more extra page
+    const totalPage = this.state.total !== undefined ?
+      Math.ceil(this.state.total / this.state.perpage) : this.state.page + 1;
 
     // Only show pages when total page is > 1
     if (totalPage <= 1) return '';

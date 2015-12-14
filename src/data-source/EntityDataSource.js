@@ -45,13 +45,13 @@ export default class EntityDataSource extends DataSource {
         const listProperty = entityInfo[this.entity].apiProperty;
         const countProperty = entityInfo[this.entity].apiCountProperty || 'count';
         const entities = listProperty ? response[listProperty] : response;
-        const count = countProperty ? response[countProperty] : 0;
+        const count = countProperty ? response[countProperty] : undefined;
         // Set data
         this.data = {
           page: page,
           total: count,
           entities: entities,
-          perpage: 15,
+          perpage: count === undefined ? entities.length : 15,
           search: search,
           sortProperty: sortProperty,
           sortOrderDesc: sortOrderDesc,
