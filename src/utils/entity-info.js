@@ -52,4 +52,16 @@ export default {
       ['Name', 'name'],
     ],
   },
+  reactIssue: {
+    label: 'React issue',
+    apiEndPoint: 'https://api.github.com/repos/facebook/react/issues',
+    keyField: 'id',
+    apiProperty: undefined, // Self
+    searchFields: ['title'],
+    apiCountProperty: undefined, // Sadly github api does not provide this
+    valueField: 'id',
+    listFields: [
+      ['Title', 'title'],
+    ]
+  }
 };

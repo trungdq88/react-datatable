@@ -40,12 +40,12 @@ export default class EntityDataSource extends DataSource {
         key + '=' + this.extraParams[key]).join('&');
     }
 
-    api.get(apiEndPoint + '/?' + query, {}, this.disableCache)
+    api.get(apiEndPoint + '?' + query, {}, this.disableCache)
       .done((response) => {
         const listProperty = entityInfo[this.entity].apiProperty;
         const countProperty = entityInfo[this.entity].apiCountProperty || 'count';
-        const entities = response[listProperty];
-        const count = response[countProperty];
+        const entities = listProperty ? response[listProperty] : response;
+        const count = countProperty ? response[countProperty] : 0;
         // Set data
         this.data = {
           page: page,

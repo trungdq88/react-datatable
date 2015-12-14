@@ -1,7 +1,6 @@
 /**
  * Created by dinhquangtrung on 9/30/15.
  */
-import config from './config.dev';
 import cache from './request-cache';
 const $ = window.jQuery;
 
@@ -27,7 +26,7 @@ const api = {
       const options = $.extend({}, {
         data: data,
       }, this.extraOptions, {
-        url: config.API_ENDPOINT + url,
+        url: url,
         method: method,
       });
       this.log('Request sent: ', cacheKey, options);
@@ -74,7 +73,7 @@ const api = {
   },
   upload(url, formData) {
     return $.ajax({
-      url: config.API_ENDPOINT + url,
+      url: url,
       type: 'PUT',
       data: formData,
       processData: false,
