@@ -18,10 +18,12 @@ export default class App extends React.Component {
   render() {
     return (
       <div className="table">
+        <h1 className="text-center">Static data</h1>
         <DataTable id="category-table" dataSource={this.dataSource}/>
 
         <hr/>
 
+        <h1 className="text-center">Ajax data (React github issues)</h1>
         <DataTable id="react-issue-table" dataSource={this.reactIssueDataSource}/>
       </div>
     )

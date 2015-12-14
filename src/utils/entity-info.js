@@ -61,7 +61,26 @@ export default {
     apiCountProperty: undefined, // Sadly github api does not provide this
     valueField: 'id',
     listFields: [
-      ['Title', 'title'],
+      ['Title', {
+        field: 'title',
+        transform: function t(value) {
+          return <a target="_blank" href={this.url}>{value}</a>;
+        }
+      }],
+      ['Labels', {
+        field: 'labels',
+        transform: function t(value) {
+          return value.map(label => {
+            return (
+              <span className="label-wrapper">
+                <span className="label" style={{backgroundColor: label.color}}>{label.name}</span>
+                {' '}
+              </span>
+            )
+          })
+        }
+      }],
+      ['Comments', 'comments']
     ]
   }
 };
