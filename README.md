@@ -18,3 +18,4 @@ Start dev server for development
 
 No tests available yet.
 
+DEMO: http://trungdq88.github.io/react-datatable
