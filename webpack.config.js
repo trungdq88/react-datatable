@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
-var buildDir = 'build/';
+var buildDir = './build';
 
 var config = {
   context: path.join(__dirname, 'src'),
@@ -12,7 +12,7 @@ var config = {
     demo: ['./demo.js']
   },
   output: {
-    path: buildDir,
+    path: path.resolve(buildDir),
     publicPath: '/',
     filename: 'index.js',
     pathinfo: false
