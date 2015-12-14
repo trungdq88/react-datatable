@@ -11,7 +11,7 @@ export default class StaticDataSource extends DataSource {
     this.items = items;
     this.entity = entity;
     this.extraColums = [];
-    this.perpage = items.length;
+    this.perpage = 15;
   }
 
   fetch(page, search, sortProperty, sortOrderDesc, filter) {

@@ -2,6 +2,11 @@ var webpack = require('webpack');
 var path = require('path');
 var buildDir = './build';
 
+cssLoader = [
+  'style-loader',
+  'css-loader?sourceMap&localIdentName=[name]__[local]___[hash:base64:5]',
+].join('!');
+
 var config = {
   context: path.join(__dirname, 'src'),
   cache: true,
@@ -28,6 +33,11 @@ var config = {
         test: /\.html$/,
         loader: 'file-loader?name=[path][name].[ext]'
       },
+      { test: /\.css$/, loader: cssLoader /* "style-loader!css-loader" */ },
+      {
+        test: /\.less$/,
+        loader: "style!css!less"
+      }
     ]
   },
   plugins: [
