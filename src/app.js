@@ -19,7 +19,10 @@ export default class App extends React.Component {
     return (
       <div className="table">
         <h1 className="text-center">Static data</h1>
-        <DataTable id="category-table" dataSource={this.dataSource}/>
+        <DataTable id="category-table"
+                   dataSource={this.dataSource}
+                   searchable
+                   sortable />
 
         <hr/>
 

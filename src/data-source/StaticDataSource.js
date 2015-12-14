@@ -38,17 +38,22 @@ export default class StaticDataSource extends DataSource {
         return false;
       });
     }
+    // Save the total item for pagination
+    var _total = data.length;
+
     // 3. Order
     if (sortProperty && sortOrderDesc !== null) {
       data = data.concat([]).sort((a, b) => (2 * (+sortOrderDesc) - 1) *
       (a[sortProperty] > b[sortProperty] ? 1 : -1));
     }
+
     // 4. Paging
     const pageItems = data.slice(this.perpage * (page - 1), page * this.perpage);
+
     // Set data
     this.data = {
       page: page,
-      total: this.items.length,
+      total: _total,
       entities: pageItems,
       perpage: this.perpage,
       search: search,
