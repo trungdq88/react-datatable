@@ -1,8 +1,7 @@
 import EventEmitter from 'event-emitter';
 /**
  * Created by dinhquangtrung on 10/2/15.
- */
-/**
+ *
  * Abstract class
  * Contains:
  * - Data source for DataTable (API or existing array of elements)

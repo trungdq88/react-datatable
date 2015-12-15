@@ -1,20 +1,14 @@
 import React from 'react';
 import './style/style.less';
-import DataTable from './DataTable';
-import StaticDataSource from './data-source/StaticDataSource';
+import DataTable from './lib/DataTable';
+import CategoryDataSource from './data-source/CategoryDataSource';
 import GitHubIssueDataSource from './data-source/GitHubIssueDataSource';
 import fakeData from './utils/fake-data';
-import entityInfo from './utils/entity-info';
 
 export default class App extends React.Component {
   constructor(...args) {
     super(...args);
-    this.state = {
-      entries: fakeData.categories
-    };
-
-    this.dataSource = new StaticDataSource('category-list-select',
-      entityInfo['category'], this.state.entries);
+    this.categoryDataSource = new CategoryDataSource('category-list-select', fakeData.categories);
     this.reactIssueDataSource = new GitHubIssueDataSource('react-issues')
   }
   render() {
@@ -22,7 +16,7 @@ export default class App extends React.Component {
       <div className="table">
         <h1 className="text-center">Static data</h1>
         <DataTable id="category-table"
-                   dataSource={this.dataSource}
+                   dataSource={this.categoryDataSource}
                    searchable
                    sortable />
 

@@ -1,14 +1,28 @@
-import DataSource from './DataSource.js';
+import {DataSource} from './../lib/DataTable.js';
 
 /**
  * Data source for entity with existing data
  */
 export default class StaticDataSource extends DataSource {
 
-  constructor(name, entity, items) {
+  meta = {
+    label: 'Category',
+    apiEndPoint: 'category',
+    exportEndPoint: '',
+    apiProperty: 'categories',
+    searchFields: ['name'],
+    apiCountProperty: 'num_items',
+    keyField: 'id',
+    valueField: 'name',
+    listFields: [
+      ['Name', 'name'],
+    ],
+  };
+
+  constructor(name, items) {
     super(name);
     this.items = items;
-    this.entity = entity;
+    this.entity = this.meta;
     this.extraColums = [];
   }
 
@@ -18,7 +32,7 @@ export default class StaticDataSource extends DataSource {
     if (filter && Object.keys(filter).length > 0) {
       const filterFunc = item => item[this] === filter[this];
       for (const property in filter) {
-        if (property ) {
+        if (property) {
           data = data.filter(filterFunc.bind(property));
         }
       }

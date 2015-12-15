@@ -4,14 +4,15 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import FriendlyLoader from './FriendlyLoader.js';
+import FriendlyLoader from './../FriendlyLoader.js';
+import DataSource from './DataSource';
 
 /**
  * Usage
  * const dataSource = new EntityDataSource('coupon-stores-add', 'store');
  * <DataTable id={'list-facilities-data-table'} dataSource={dataSource} perpage="15" />
  */
-export default class DataTable extends React.Component {
+class DataTable extends React.Component {
   DEFAULT_PER_PAGE = 10;
 
   constructor(...args) {
@@ -391,3 +392,6 @@ export default class DataTable extends React.Component {
     );
   }
 }
+
+DataTable.DataSource = DataSource;
+export default DataTable;
