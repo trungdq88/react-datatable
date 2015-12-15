@@ -2,7 +2,7 @@ import React from 'react';
 import './style/style.less';
 import DataTable from './DataTable';
 import StaticDataSource from './data-source/StaticDataSource';
-import EntityDataSource from './data-source/EntityDataSource';
+import GitHubIssueDataSource from './data-source/GitHubIssueDataSource';
 import fakeData from './utils/fake-data';
 import entityInfo from './utils/entity-info';
 
@@ -15,7 +15,7 @@ export default class App extends React.Component {
 
     this.dataSource = new StaticDataSource('category-list-select',
       entityInfo['category'], this.state.entries);
-    this.reactIssueDataSource = new EntityDataSource('react-issues',
+    this.reactIssueDataSource = new GitHubIssueDataSource('react-issues',
       entityInfo['reactIssue'])
   }
   render() {
@@ -33,7 +33,10 @@ export default class App extends React.Component {
         {/*
         TODO: add adapter to integrate with GitHub API
         */}
-        <DataTable id="react-issue-table" dataSource={this.reactIssueDataSource}/>
+        <DataTable id="react-issue-table"
+                   dataSource={this.reactIssueDataSource}
+                   sortable
+                   searchtable />
       </div>
     )
   }

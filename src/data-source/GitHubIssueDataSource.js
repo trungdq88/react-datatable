@@ -1,14 +1,53 @@
+import React from 'react';
 import DataSource from './DataSource.js';
 import api from '../utils/api.js';
 
 /**
  * Data source from entity APIs
  */
-export default class EntityDataSource extends DataSource {
+export default class GitHubIssueDataSource extends DataSource {
 
-  constructor(name, entity) {
+  meta = {
+    label: 'React issue',
+    apiEndPoint: 'https://api.github.com/repos/facebook/react/issues',
+    keyField: 'id',
+    apiProperty: undefined, // Self
+    searchFields: ['title'],
+    apiCountProperty: undefined, // Sadly github api does not provide this
+    valueField: 'id',
+    listFields: [
+      ['Title', {
+        field: 'title',
+        transform: function t(value) {
+          return <a target="_blank" href={this.url}>{value}</a>;
+        }
+      }],
+      ['Labels', {
+        field: 'labels',
+        transform: function t(value) {
+          return value.map(label => {
+            return (
+              <span className="label-wrapper">
+                <span className="label" style={{backgroundColor: label.color}}>{label.name}</span>
+                {' '}
+              </span>
+            )
+          })
+        }
+      }],
+      ['Comments', 'comments'],
+      ['Created at', {
+        field: 'created_at',
+        transform: function t(value) {
+          return new Date(value).toLocaleString();
+        }
+      }],
+    ]
+  };
+
+  constructor(name) {
     super(name);
-    this.entity = entity;
+    this.entity = this.meta;
     this.extraColums = [];
     this.extraParams = {};
     this.disableCache = false;
@@ -24,8 +63,8 @@ export default class EntityDataSource extends DataSource {
     if (search) query += '&query=' + search;
     // 3. Sort
     if (sortProperty && sortOrderDesc !== null) {
-      query += '&order_by=' + sortProperty +
-        '&order_type=' + (sortOrderDesc ? 'desc' : 'asc');
+      query += '&sort=' + sortProperty +
+        '&direction=' + (sortOrderDesc ? 'desc' : 'asc');
     }
     // 4. Filter
     if (filter && Object.keys(filter).length > 0) {
@@ -59,8 +98,8 @@ export default class EntityDataSource extends DataSource {
         // Emit event
         this.trigger('change');
       }).fail(() => {
-        this.trigger('failed');
-      });
+      this.trigger('failed');
+    });
   }
 
   getFields() {
