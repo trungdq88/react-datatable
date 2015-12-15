@@ -1,5 +1,3 @@
-body {
-}
 .hide {
   display: none;
 }
@@ -44,14 +42,11 @@ body {
     opacity: 1;
   }
 }
-
-table.sortable {
-  th {
-    white-space: nowrap;
-    span {
-      cursor: pointer;
-    }
-  }
+table.sortable th {
+  white-space: nowrap;
+}
+table.sortable th span {
+  cursor: pointer;
 }
 table th.has-filter-true .sort-icon {
   margin-right: 30px;
@@ -64,8 +59,8 @@ table th.has-filter-true .sort-icon {
 }
 span.label-wrapper {
   display: inline-block;
-  .label {
-    color: black;
-    line-height: 2;
-  }
+}
+span.label-wrapper .label {
+  color: black;
+  line-height: 2;
 }
