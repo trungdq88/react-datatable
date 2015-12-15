@@ -8,9 +8,8 @@ import EventEmitter from 'event-emitter';
  * - List of fields to display on DataTable
  */
 export default class DataSource {
-  DEFAULT_PER_PAGE = 10;
-
   constructor(name) {
+    this.DEFAULT_PER_PAGE = 10;
     this.name = name;
     this.data = [];
     this._event = EventEmitter({});

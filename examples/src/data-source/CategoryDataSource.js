@@ -1,26 +1,26 @@
-import {DataSource} from './../lib/DataTable.js';
+import {DataSource} from 'react-datatable';
 
 /**
  * Data source for entity with existing data
  */
 export default class StaticDataSource extends DataSource {
 
-  meta = {
-    label: 'Category',
-    apiEndPoint: 'category',
-    exportEndPoint: '',
-    apiProperty: 'categories',
-    searchFields: ['name'],
-    apiCountProperty: 'num_items',
-    keyField: 'id',
-    valueField: 'name',
-    listFields: [
-      ['Name', 'name'],
-    ],
-  };
-
   constructor(name, items) {
     super(name);
+    this.meta = {
+      label: 'Category',
+      apiEndPoint: 'category',
+      exportEndPoint: '',
+      apiProperty: 'categories',
+      searchFields: ['name'],
+      apiCountProperty: 'num_items',
+      keyField: 'id',
+      valueField: 'name',
+      listFields: [
+        ['Name', 'name'],
+      ],
+    };
+
     this.items = items;
     this.entity = this.meta;
     this.extraColums = [];

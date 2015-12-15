@@ -1,6 +1,5 @@
 import React from 'react';
-import './style/style.less';
-import DataTable from './lib/DataTable';
+import DataTable from 'react-datatable';
 import CategoryDataSource from './data-source/CategoryDataSource';
 import GitHubIssueDataSource from './data-source/GitHubIssueDataSource';
 import fakeData from './utils/fake-data';

@@ -4,7 +4,7 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import FriendlyLoader from './../FriendlyLoader.js';
+import FriendlyLoader from './FriendlyLoader.js';
 import DataSource from './DataSource';
 
 /**
@@ -13,10 +13,9 @@ import DataSource from './DataSource';
  * <DataTable id={'list-facilities-data-table'} dataSource={dataSource} perpage="15" />
  */
 class DataTable extends React.Component {
-  DEFAULT_PER_PAGE = 10;
-
   constructor(...args) {
     super(...args);
+    this.DEFAULT_PER_PAGE = 10;
     this.PAGES_BEFORE = 3;
     this.PAGES_AFTER = 4;
     this.state = {

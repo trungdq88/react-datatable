@@ -1,52 +1,50 @@
 import React from 'react';
-import {DataSource} from './../lib/DataTable.js';
+import {DataSource} from 'react-datatable';
 import api from '../utils/api.js';
 
 /**
  * Data source from entity APIs
  */
 export default class GitHubIssueDataSource extends DataSource {
-
-  meta = {
-    label: 'Github issue',
-    apiEndPoint: 'https://api.github.com/repos/facebook/react/issues',
-    keyField: 'id',
-    apiProperty: undefined, // The object itself is an array
-    searchFields: ['title'],
-    apiCountProperty: undefined, // Sadly GitHub api does not provide this
-    valueField: 'id',
-    listFields: [
-      ['Title', {
-        field: 'title',
-        transform: function t(value) {
-          return <a target="_blank" href={this.url}>{value}</a>;
-        }
-      }],
-      ['Labels', {
-        field: 'labels',
-        transform: function t(value) {
-          return value.map(label => {
-            return (
-              <span className="label-wrapper">
-                <span className="label" style={{backgroundColor: label.color}}>{label.name}</span>
-                {' '}
-              </span>
-            )
-          })
-        }
-      }],
-      ['Comments', 'comments'],
-      ['Created at', {
-        field: 'created_at',
-        transform: function t(value) {
-          return new Date(value).toLocaleString();
-        }
-      }],
-    ]
-  };
-
   constructor(name) {
     super(name);
+    this.meta = {
+      label: 'Github issue',
+      apiEndPoint: 'https://api.github.com/repos/facebook/react/issues',
+      keyField: 'id',
+      apiProperty: undefined, // The object itself is an array
+      searchFields: ['title'],
+      apiCountProperty: undefined, // Sadly GitHub api does not provide this
+      valueField: 'id',
+      listFields: [
+        ['Title', {
+          field: 'title',
+          transform: function t(value) {
+            return <a target="_blank" href={this.url}>{value}</a>;
+          }
+        }],
+        ['Labels', {
+          field: 'labels',
+          transform: function t(value) {
+            return value.map(label => {
+              return (
+                <span className="label-wrapper">
+                <span className="label" style={{backgroundColor: label.color}}>{label.name}</span>
+                  {' '}
+              </span>
+              )
+            })
+          }
+        }],
+        ['Comments', 'comments'],
+        ['Created at', {
+          field: 'created_at',
+          transform: function t(value) {
+            return new Date(value).toLocaleString();
+          }
+        }],
+      ]
+    };
     this.entity = this.meta;
     this.disableCache = false;
   }
