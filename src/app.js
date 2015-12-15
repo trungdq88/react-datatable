@@ -34,8 +34,7 @@ export default class App extends React.Component {
         */}
         <DataTable id="react-issue-table"
                    dataSource={this.reactIssueDataSource}
-                   sortable
-                   searchtable />
+                   sortable />
       </div>
     )
   }
