@@ -31,6 +31,10 @@ var _dataSourceGitHubIssueDataSource = require('./data-source/GitHubIssueDataSou
 
 var _dataSourceGitHubIssueDataSource2 = _interopRequireDefault(_dataSourceGitHubIssueDataSource);
 
+var _dataSourceWikiDataSource = require('./data-source/WikiDataSource');
+
+var _dataSourceWikiDataSource2 = _interopRequireDefault(_dataSourceWikiDataSource);
+
 var _utilsFakeData = require('./utils/fake-data');
 
 var _utilsFakeData2 = _interopRequireDefault(_utilsFakeData);
@@ -48,6 +52,7 @@ var App = (function (_React$Component) {
     _get(Object.getPrototypeOf(App.prototype), 'constructor', this).apply(this, args);
     this.categoryDataSource = new _dataSourceCategoryDataSource2['default']('category-list-select', _utilsFakeData2['default'].categories);
     this.reactIssueDataSource = new _dataSourceGitHubIssueDataSource2['default']('react-issues');
+    this.wikiDataSource = new _dataSourceWikiDataSource2['default']('wiki-pages');
   }
 
   _createClass(App, [{
@@ -85,9 +90,16 @@ exports['default'] = App;
 module.exports = exports['default'];
 /*
 TODO: add adapter to integrate with GitHub API
-*/
+*/ /*
+   <hr/>
+   <h1 className="text-center">Wiki pages</h1>
+   TODO: Wiki API require CORS
+   <DataTable id="react-issue-table"
+             dataSource={this.wikiDataSource}
+             sortable />
+   */
 
-},{"./data-source/CategoryDataSource":2,"./data-source/GitHubIssueDataSource":3,"./utils/fake-data":6,"react":undefined,"react-datatable":undefined}],2:[function(require,module,exports){
+},{"./data-source/CategoryDataSource":2,"./data-source/GitHubIssueDataSource":3,"./data-source/WikiDataSource":4,"./utils/fake-data":7,"react":undefined,"react-datatable":undefined}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -108,22 +120,16 @@ var _reactDatatable = require('react-datatable');
  * Data source for entity with existing data
  */
 
-var StaticDataSource = (function (_DataSource) {
-  _inherits(StaticDataSource, _DataSource);
+var CategoryDataSource = (function (_DataSource) {
+  _inherits(CategoryDataSource, _DataSource);
 
-  function StaticDataSource(name, items) {
-    _classCallCheck(this, StaticDataSource);
+  function CategoryDataSource(name, items) {
+    _classCallCheck(this, CategoryDataSource);
 
-    _get(Object.getPrototypeOf(StaticDataSource.prototype), 'constructor', this).call(this, name);
+    _get(Object.getPrototypeOf(CategoryDataSource.prototype), 'constructor', this).call(this, name);
     this.meta = {
-      label: 'Category',
-      apiEndPoint: 'category',
-      exportEndPoint: '',
-      apiProperty: 'categories',
-      searchFields: ['name'],
-      apiCountProperty: 'num_items',
       keyField: 'id',
-      valueField: 'name',
+      searchFields: ['name'],
       listFields: [['Name', 'name']]
     };
 
@@ -132,7 +138,7 @@ var StaticDataSource = (function (_DataSource) {
     this.extraColums = [];
   }
 
-  _createClass(StaticDataSource, [{
+  _createClass(CategoryDataSource, [{
     key: 'fetch',
     value: function fetch(page, search, sortProperty, sortOrderDesc, filter, perpage) {
       var _this = this;
@@ -193,10 +199,10 @@ var StaticDataSource = (function (_DataSource) {
     }
   }]);
 
-  return StaticDataSource;
+  return CategoryDataSource;
 })(_reactDatatable.DataSource);
 
-exports['default'] = StaticDataSource;
+exports['default'] = CategoryDataSource;
 module.exports = exports['default'];
 
 },{"react-datatable":undefined}],3:[function(require,module,exports){
@@ -238,13 +244,8 @@ var GitHubIssueDataSource = (function (_DataSource) {
 
     _get(Object.getPrototypeOf(GitHubIssueDataSource.prototype), 'constructor', this).call(this, name);
     this.meta = {
-      label: 'Github issue',
-      apiEndPoint: 'https://api.github.com/repos/facebook/react/issues',
       keyField: 'id',
-      apiProperty: undefined, // The object itself is an array
       searchFields: ['title'],
-      apiCountProperty: undefined, // Sadly GitHub api does not provide this
-      valueField: 'id',
       listFields: [['Title', {
         field: 'title',
         transform: function t(value) {
@@ -286,7 +287,7 @@ var GitHubIssueDataSource = (function (_DataSource) {
     value: function fetch(page, search, sortProperty, sortOrderDesc, filter, perpage) {
       var _this = this;
 
-      var apiEndPoint = this.entity.apiEndPoint;
+      var apiEndPoint = 'https://api.github.com/repos/facebook/react/issues';
 
       // Build query
       // 1. Pagination
@@ -312,16 +313,12 @@ var GitHubIssueDataSource = (function (_DataSource) {
       }
 
       _utilsApiJs2['default'].get(apiEndPoint + '?' + query, {}, this.disableCache).done(function (response) {
-        var listProperty = _this.entity.apiProperty;
-        var countProperty = _this.entity.apiCountProperty || 'count';
-        var entities = listProperty ? response[listProperty] : response;
-        var count = countProperty ? response[countProperty] : undefined;
         // Set data
         _this.data = {
           page: page,
-          total: count,
-          entities: entities,
-          perpage: perpage || (count === undefined ? entities.length : _this.DEFAULT_PER_PAGE),
+          total: undefined, // Sad, GitHub does not provide this information
+          entities: response,
+          perpage: perpage || _this.DEFAULT_PER_PAGE,
           search: search,
           sortProperty: sortProperty,
           sortOrderDesc: sortOrderDesc
@@ -341,7 +338,107 @@ var GitHubIssueDataSource = (function (_DataSource) {
 exports['default'] = GitHubIssueDataSource;
 module.exports = exports['default'];
 
-},{"../utils/api.js":5,"react":undefined,"react-datatable":undefined}],4:[function(require,module,exports){
+},{"../utils/api.js":6,"react":undefined,"react-datatable":undefined}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDatatable = require('react-datatable');
+
+var _utilsApiJs = require('../utils/api.js');
+
+var _utilsApiJs2 = _interopRequireDefault(_utilsApiJs);
+
+/**
+ * Data source from entity APIs
+ */
+
+var WikiDataSource = (function (_DataSource) {
+  _inherits(WikiDataSource, _DataSource);
+
+  function WikiDataSource(name) {
+    _classCallCheck(this, WikiDataSource);
+
+    _get(Object.getPrototypeOf(WikiDataSource.prototype), 'constructor', this).call(this, name);
+    this.meta = {
+      keyField: 'pageid',
+      searchFields: ['title'],
+      listFields: [['Title', 'title']]
+    };
+    this.entity = this.meta;
+    this.disableCache = false;
+  }
+
+  _createClass(WikiDataSource, [{
+    key: 'fetch',
+    value: function fetch(page, search, sortProperty, sortOrderDesc, filter, perpage) {
+      var _this = this;
+
+      var apiEndPoint = 'https://en.wikipedia.org/w/api.php?action=query&generator=allpages&prop=info';
+      var query = "";
+      // Build query
+      // 1. Pagination
+      // let query = '&page=' + page;
+      if (perpage) query += '&gaplimit=' + perpage;
+      // 2. Search
+      // if (search) query += '&query=' + search;
+      // 3. Sort
+      if (sortProperty && sortOrderDesc !== null) {
+        query += '&gapdir=' + (sortOrderDesc ? 'descending' : 'ascending');
+      }
+      // 4. Filter
+      //if (filter && Object.keys(filter).length > 0) {
+      //  query += Object.keys(filter).map((property) => {
+      //    return '&' + property + '=' + filter[property];
+      //  });
+      //}
+
+      _utilsApiJs2['default'].get(apiEndPoint + '?' + query, {}).done(function (response) {
+        results = Object.keys(response.query.pages).map(function (key) {
+          return response.query.pages[key];
+        });
+        // Set data
+        _this.data = {
+          page: page,
+          total: undefined,
+          entities: results,
+          perpage: perpage || _this.DEFAULT_PER_PAGE,
+          search: search,
+          sortProperty: sortProperty,
+          sortOrderDesc: sortOrderDesc
+        };
+
+        // Emit event
+        _this.trigger('change');
+      }).fail(function () {
+        _this.trigger('failed');
+      });
+    }
+  }]);
+
+  return WikiDataSource;
+})(_reactDatatable.DataSource);
+
+exports['default'] = WikiDataSource;
+module.exports = exports['default'];
+
+},{"../utils/api.js":6,"react":undefined,"react-datatable":undefined}],5:[function(require,module,exports){
 /**
  * Created by dinhquangtrung on 12/14/15.
  */
@@ -363,7 +460,7 @@ var _app2 = _interopRequireDefault(_app);
 
 _reactDom2['default'].render(_react2['default'].createElement(_app2['default'], null), document.getElementById('app'));
 
-},{"./app":1,"react":undefined,"react-dom":undefined}],5:[function(require,module,exports){
+},{"./app":1,"react":undefined,"react-dom":undefined}],6:[function(require,module,exports){
 /**
  * Created by dinhquangtrung on 9/30/15.
  */
@@ -471,7 +568,7 @@ var api = {
 exports['default'] = api;
 module.exports = exports['default'];
 
-},{"./request-cache":7}],6:[function(require,module,exports){
+},{"./request-cache":8}],7:[function(require,module,exports){
 /**
  * Created by dinhquangtrung on 12/14/15.
  */
@@ -486,7 +583,7 @@ exports["default"] = {
 };
 module.exports = exports["default"];
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /**
  * Created by dinhquangtrung on 9/30/15.
  */
@@ -538,4 +635,4 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{}]},{},[4]);
+},{}]},{},[5]);

@@ -566,7 +566,7 @@ var DataTable = (function (_React$Component) {
       // Build the table and return to `render` method
       return _react2['default'].createElement(
         'div',
-        null,
+        { className: 'react-datatable' },
         _react2['default'].createElement(
           'div',
           { className: 'row' },
