@@ -28,7 +28,7 @@ export default class App extends React.Component {
 
         <hr/>
 
-        <h1 className="text-center">Ajax data (React github issues)</h1>
+        <h1 className="text-center">Ajax data (React GitHub issues)</h1>
         {/*
         TODO: add adapter to integrate with GitHub API
         */}
