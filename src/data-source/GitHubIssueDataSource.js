@@ -59,18 +59,18 @@ export default class GitHubIssueDataSource extends DataSource {
     let query = '&page=' + page;
     if (perpage) query += '&per_page=' + perpage;
     // 2. Search
-    if (search) query += '&query=' + search;
+    // if (search) query += '&query=' + search; // Sad, GitHub API does not provide search
     // 3. Sort
     if (sortProperty && sortOrderDesc !== null) {
       query += '&sort=' + sortProperty +
         '&direction=' + (sortOrderDesc ? 'desc' : 'asc');
     }
-    // 4. Filter
-    if (filter && Object.keys(filter).length > 0) {
-      query += Object.keys(filter).map((property) => {
-        return '&' + property + '=' + filter[property];
-      });
-    }
+    // 4. Filter // Sad, GitHub API does not provide filter
+    //if (filter && Object.keys(filter).length > 0) {
+    //  query += Object.keys(filter).map((property) => {
+    //    return '&' + property + '=' + filter[property];
+    //  });
+    //}
     // 5. Extra params
     if (Object.keys(this.extraParams).length) {
       query += '&' + Object.keys(this.extraParams).map((key) =>
