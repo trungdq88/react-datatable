@@ -9,13 +9,8 @@ export default class GitHubIssueDataSource extends DataSource {
   constructor(name) {
     super(name);
     this.meta = {
-      label: 'Github issue',
-      apiEndPoint: 'https://api.github.com/repos/facebook/react/issues',
       keyField: 'id',
-      apiProperty: undefined, // The object itself is an array
       searchFields: ['title'],
-      apiCountProperty: undefined, // Sadly GitHub api does not provide this
-      valueField: 'id',
       listFields: [
         ['Title', {
           field: 'title',
@@ -50,7 +45,7 @@ export default class GitHubIssueDataSource extends DataSource {
   }
 
   fetch(page, search, sortProperty, sortOrderDesc, filter, perpage) {
-    const {apiEndPoint} = this.entity;
+    const apiEndPoint = 'https://api.github.com/repos/facebook/react/issues';
 
     // Build query
     // 1. Pagination
@@ -77,16 +72,12 @@ export default class GitHubIssueDataSource extends DataSource {
 
     api.get(apiEndPoint + '?' + query, {}, this.disableCache)
       .done((response) => {
-        const listProperty = this.entity.apiProperty;
-        const countProperty = this.entity.apiCountProperty || 'count';
-        const entities = listProperty ? response[listProperty] : response;
-        const count = countProperty ? response[countProperty] : undefined;
         // Set data
         this.data = {
           page: page,
-          total: count,
-          entities: entities,
-          perpage: perpage || (count === undefined ? entities.length : this.DEFAULT_PER_PAGE),
+          total: undefined, // Sad, GitHub does not provide this information
+          entities: response,
+          perpage: perpage || (count === undefined ? response.length : this.DEFAULT_PER_PAGE),
           search: search,
           sortProperty: sortProperty,
           sortOrderDesc: sortOrderDesc,

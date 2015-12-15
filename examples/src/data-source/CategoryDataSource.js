@@ -8,14 +8,8 @@ export default class CategoryDataSource extends DataSource {
   constructor(name, items) {
     super(name);
     this.meta = {
-      label: 'Category',
-      apiEndPoint: 'category',
-      exportEndPoint: '',
-      apiProperty: 'categories',
-      searchFields: ['name'],
-      apiCountProperty: 'num_items',
       keyField: 'id',
-      valueField: 'name',
+      searchFields: ['name'],
       listFields: [
         ['Name', 'name'],
       ],
