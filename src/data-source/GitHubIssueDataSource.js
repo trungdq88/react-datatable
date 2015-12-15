@@ -8,12 +8,12 @@ import api from '../utils/api.js';
 export default class GitHubIssueDataSource extends DataSource {
 
   meta = {
-    label: 'React issue',
+    label: 'Github issue',
     apiEndPoint: 'https://api.github.com/repos/facebook/react/issues',
     keyField: 'id',
-    apiProperty: undefined, // Self
+    apiProperty: undefined, // The object itself is an array
     searchFields: ['title'],
-    apiCountProperty: undefined, // Sadly github api does not provide this
+    apiCountProperty: undefined, // Sadly GitHub api does not provide this
     valueField: 'id',
     listFields: [
       ['Title', {
@@ -48,17 +48,16 @@ export default class GitHubIssueDataSource extends DataSource {
   constructor(name) {
     super(name);
     this.entity = this.meta;
-    this.extraColums = [];
-    this.extraParams = {};
     this.disableCache = false;
   }
 
-  fetch(page, search, sortProperty, sortOrderDesc, filter) {
+  fetch(page, search, sortProperty, sortOrderDesc, filter, perpage) {
     const {apiEndPoint} = this.entity;
 
     // Build query
     // 1. Pagination
     let query = '&page=' + page;
+    if (perpage) query += '&per_page=' + perpage;
     // 2. Search
     if (search) query += '&query=' + search;
     // 3. Sort
@@ -89,7 +88,7 @@ export default class GitHubIssueDataSource extends DataSource {
           page: page,
           total: count,
           entities: entities,
-          perpage: count === undefined ? entities.length : 15,
+          perpage: perpage || (count === undefined ? entities.length : this.DEFAULT_PER_PAGE),
           search: search,
           sortProperty: sortProperty,
           sortOrderDesc: sortOrderDesc,
@@ -100,22 +99,5 @@ export default class GitHubIssueDataSource extends DataSource {
       }).fail(() => {
       this.trigger('failed');
     });
-  }
-
-  getFields() {
-    return this.entity.listFields.concat(this.extraColums);
-  }
-
-  setExtraColumns(extraColumns) {
-    this.extraColums = extraColumns;
-  }
-
-  /**
-   * Received extra param objects {key: String, value: String}
-   * These params will be append to API call.
-   * @param params
-   */
-  setExtraParams(params) {
-    this.extraParams = params;
   }
 }

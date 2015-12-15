@@ -9,9 +9,10 @@ import FriendlyLoader from './FriendlyLoader.js';
 /**
  * Usage
  * const dataSource = new EntityDataSource('coupon-stores-add', 'store');
- * <DataTable id={'list-facilities-data-table'} dataSource={dataSource}/>
+ * <DataTable id={'list-facilities-data-table'} dataSource={dataSource} perpage="15" />
  */
 export default class DataTable extends React.Component {
+  DEFAULT_PER_PAGE = 10;
 
   constructor(...args) {
     super(...args);
@@ -22,7 +23,7 @@ export default class DataTable extends React.Component {
       entities: [],
       doneLoading: false,
       page: 1,
-      perpage: 0,
+      perpage: this.props.perpage || this.DEFAULT_PER_PAGE,
       search: undefined,
       sortProperty: undefined,
       sortOrderDesc: true,
@@ -79,7 +80,7 @@ export default class DataTable extends React.Component {
   isFilterQueryChanged() {
     return !(this.state.page === 1 &&
     this.state.search === undefined &&
-    this.state.perpage === 15 &&
+    this.state.perpage === this.DEFAULT_PER_PAGE &&
     this.state.sortProperty === undefined &&
     this.state.sortOrderDesc === true &&
     Object.keys(this.state.filter).length === 0);
@@ -91,7 +92,8 @@ export default class DataTable extends React.Component {
       this.state.search,
       this.state.sortProperty,
       this.state.sortOrderDesc,
-      this.state.filter
+      this.state.filter,
+      this.state.perpage
     );
   }
 

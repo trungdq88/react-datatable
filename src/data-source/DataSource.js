@@ -9,6 +9,8 @@ import EventEmitter from 'event-emitter';
  * - List of fields to display on DataTable
  */
 export default class DataSource {
+  DEFAULT_PER_PAGE = 10;
+
   constructor(name) {
     this.name = name;
     this.data = [];
@@ -64,5 +66,22 @@ export default class DataSource {
    */
   trigger() {
     this._event.emit.apply(this._event, arguments);
+  }
+
+  getFields() {
+    return this.entity.listFields.concat(this.extraColums);
+  }
+
+  setExtraColumns(extraColumns) {
+    this.extraColums = extraColumns;
+  }
+
+  /**
+   * Received extra param objects {key: String, value: String}
+   * These params will be append to API call.
+   * @param params
+   */
+  setExtraParams(params) {
+    this.extraParams = params;
   }
 }

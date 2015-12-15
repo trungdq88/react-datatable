@@ -15,8 +15,7 @@ export default class App extends React.Component {
 
     this.dataSource = new StaticDataSource('category-list-select',
       entityInfo['category'], this.state.entries);
-    this.reactIssueDataSource = new GitHubIssueDataSource('react-issues',
-      entityInfo['reactIssue'])
+    this.reactIssueDataSource = new GitHubIssueDataSource('react-issues')
   }
   render() {
     return (

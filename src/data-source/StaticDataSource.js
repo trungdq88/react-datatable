@@ -10,10 +10,9 @@ export default class StaticDataSource extends DataSource {
     this.items = items;
     this.entity = entity;
     this.extraColums = [];
-    this.perpage = 15;
   }
 
-  fetch(page, search, sortProperty, sortOrderDesc, filter) {
+  fetch(page, search, sortProperty, sortOrderDesc, filter, perpage) {
     let data = this.items;
     // 1. Filter
     if (filter && Object.keys(filter).length > 0) {
@@ -47,14 +46,15 @@ export default class StaticDataSource extends DataSource {
     }
 
     // 4. Paging
-    const pageItems = data.slice(this.perpage * (page - 1), page * this.perpage);
+    perpage = perpage || this.DEFAULT_PER_PAGE;
+    const pageItems = data.slice(perpage * (page - 1), page * perpage);
 
     // Set data
     this.data = {
       page: page,
       total: _total,
       entities: pageItems,
-      perpage: this.perpage,
+      perpage: perpage,
       search: search,
       sortProperty: sortProperty,
       sortOrderDesc: sortOrderDesc,
@@ -62,17 +62,5 @@ export default class StaticDataSource extends DataSource {
 
     // Emit event
     this.trigger('change');
-  }
-
-  setPerpage(perpage) {
-    this.perpage = perpage;
-  }
-
-  getFields() {
-    return this.entity.listFields.concat(this.extraColums);
-  }
-
-  setExtraColumns(extraColumns) {
-    this.extraColums = extraColumns;
   }
 }
