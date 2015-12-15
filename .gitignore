@@ -1,3 +1,13 @@
 .DS_Store
-node_modules
 .idea
+
+# Coverage tools
+lib-cov
+coverage
+
+# Dependency directory
+node_modules
+bower_components
+
+# Publish directory
+.publish
