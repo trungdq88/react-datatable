@@ -3,7 +3,7 @@ import {DataSource} from 'react-datatable';
 /**
  * Data source for entity with existing data
  */
-export default class StaticDataSource extends DataSource {
+export default class CategoryDataSource extends DataSource {
 
   constructor(name, items) {
     super(name);
