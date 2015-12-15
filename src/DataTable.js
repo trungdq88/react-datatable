@@ -353,7 +353,7 @@ class DataTable extends React.Component {
 
     // Build the table and return to `render` method
     return (
-      <div>
+      <div className="react-datatable">
         <div className="row">
           <div className="col-sm-8">
 

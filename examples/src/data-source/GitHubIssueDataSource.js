@@ -77,7 +77,7 @@ export default class GitHubIssueDataSource extends DataSource {
           page: page,
           total: undefined, // Sad, GitHub does not provide this information
           entities: response,
-          perpage: perpage || (count === undefined ? response.length : this.DEFAULT_PER_PAGE),
+          perpage: perpage || this.DEFAULT_PER_PAGE,
           search: search,
           sortProperty: sortProperty,
           sortOrderDesc: sortOrderDesc,
