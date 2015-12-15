@@ -12,7 +12,9 @@ export default class DataSource {
   constructor(name) {
     this.name = name;
     this.data = [];
-    this.event = EventEmitter({});
+    this._event = EventEmitter({});
+    this.extraParams = {};
+    this.extraColums = [];
   }
 
   /**
@@ -47,20 +49,20 @@ export default class DataSource {
    * Bind event for data source
    */
   bind() {
-    this.event.on.apply(this.event, arguments);
+    this._event.on.apply(this._event, arguments);
   }
 
   /**
    * Unbind event
    */
   unbind() {
-    this.event.off.apply(this.event, arguments);
+    this._event.off.apply(this._event, arguments);
   }
 
   /**
    * Trigger events
    */
   trigger() {
-    this.event.emit.apply(this.event, arguments);
+    this._event.emit.apply(this._event, arguments);
   }
 }
