@@ -1,5 +1,4 @@
 import DataSource from './DataSource.js';
-import entityInfo from '../utils/entity-info.js';
 
 /**
  * Data source for entity with existing data
@@ -27,7 +26,7 @@ export default class StaticDataSource extends DataSource {
     }
     // 2. Search
     if (search) {
-      const searchFields = entityInfo[this.entity].searchFields;
+      const searchFields = this.entity.searchFields;
       data = data.filter((item) => {
         for (let i = 0; i < searchFields.length; i++) {
           if (item[searchFields[i]].toLowerCase()
@@ -70,7 +69,7 @@ export default class StaticDataSource extends DataSource {
   }
 
   getFields() {
-    return entityInfo[this.entity].listFields.concat(this.extraColums);
+    return this.entity.listFields.concat(this.extraColums);
   }
 
   setExtraColumns(extraColumns) {

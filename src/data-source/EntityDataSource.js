@@ -1,6 +1,5 @@
 import DataSource from './DataSource.js';
 import api from '../utils/api.js';
-import entityInfo from '../utils/entity-info.js';
 
 /**
  * Data source from entity APIs
@@ -16,7 +15,7 @@ export default class EntityDataSource extends DataSource {
   }
 
   fetch(page, search, sortProperty, sortOrderDesc, filter) {
-    const {apiEndPoint} = entityInfo[this.entity];
+    const {apiEndPoint} = this.entity;
 
     // Build query
     // 1. Pagination
@@ -42,8 +41,8 @@ export default class EntityDataSource extends DataSource {
 
     api.get(apiEndPoint + '?' + query, {}, this.disableCache)
       .done((response) => {
-        const listProperty = entityInfo[this.entity].apiProperty;
-        const countProperty = entityInfo[this.entity].apiCountProperty || 'count';
+        const listProperty = this.entity.apiProperty;
+        const countProperty = this.entity.apiCountProperty || 'count';
         const entities = listProperty ? response[listProperty] : response;
         const count = countProperty ? response[countProperty] : undefined;
         // Set data
@@ -65,7 +64,7 @@ export default class EntityDataSource extends DataSource {
   }
 
   getFields() {
-    return entityInfo[this.entity].listFields.concat(this.extraColums);
+    return this.entity.listFields.concat(this.extraColums);
   }
 
   setExtraColumns(extraColumns) {

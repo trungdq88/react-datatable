@@ -4,6 +4,7 @@ import DataTable from './DataTable';
 import StaticDataSource from './data-source/StaticDataSource';
 import EntityDataSource from './data-source/EntityDataSource';
 import fakeData from './utils/fake-data';
+import entityInfo from './utils/entity-info';
 
 export default class App extends React.Component {
   constructor(...args) {
@@ -12,8 +13,10 @@ export default class App extends React.Component {
       entries: fakeData.categories
     };
 
-    this.dataSource = new StaticDataSource('category-list-select', 'category', this.state.entries);
-    this.reactIssueDataSource = new EntityDataSource('react-issues', 'reactIssue')
+    this.dataSource = new StaticDataSource('category-list-select',
+      entityInfo['category'], this.state.entries);
+    this.reactIssueDataSource = new EntityDataSource('react-issues',
+      entityInfo['reactIssue'])
   }
   render() {
     return (

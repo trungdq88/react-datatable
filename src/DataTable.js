@@ -5,7 +5,6 @@
 import React from 'react';
 import classNames from 'classnames';
 import FriendlyLoader from './FriendlyLoader.js';
-import entityInfo from './utils/entity-info.js';
 
 /**
  * Usage
@@ -174,8 +173,8 @@ export default class DataTable extends React.Component {
 
   renderSearchbox() {
     let placeholder = 'Search...';
-    if (entityInfo[this.dataSource.entity].searchFields) {
-      placeholder = 'Search ' + entityInfo[this.dataSource.entity]
+    if (this.dataSource.entity.searchFields) {
+      placeholder = 'Search ' + this.dataSource.entity
           .searchFields.join(', ').replace(/_/g, ' ') + '...';
     }
     return (
