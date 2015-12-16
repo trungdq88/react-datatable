@@ -1,5 +1,5 @@
 import React from 'react';
-import {DataSource} from 'react-datatable';
+import {DataSource} from '@trungdq88/react-datatable';
 import api from '../utils/api.js';
 
 /**

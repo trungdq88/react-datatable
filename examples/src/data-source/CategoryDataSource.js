@@ -1,4 +1,4 @@
-import {DataSource} from 'react-datatable';
+import {DataSource} from '@trungdq88/react-datatable';
 
 /**
  * Data source for entity with existing data

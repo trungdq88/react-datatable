@@ -1,5 +1,5 @@
 {
-  "name": "react-datatable",
+  "name": "@trungdq88/react-datatable",
   "version": "0.3.0",
   "description": "",
   "main": "index.js",
@@ -19,7 +19,7 @@
     "watch": "gulp watch:lib"
   },
   "keywords": [],
-  "author": "",
+  "author": "trungdq88@gmail.com",
   "license": "ISC",
   "dependencies": {
     "classnames": "^2.2.1",
@@ -48,7 +48,6 @@
   "browserify-shim": {
     "classnames": "global:classNames",
     "react": "global:React",
-    "react-dom": "global:ReactDOM",
-    "react-input-autosize": "global:AutosizeInput"
+    "react-dom": "global:ReactDOM"
   }
 }
