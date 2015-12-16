@@ -2,7 +2,7 @@ import React from 'react';
 import DataTable from 'react-datatable';
 import CategoryDataSource from './data-source/CategoryDataSource';
 import GitHubIssueDataSource from './data-source/GitHubIssueDataSource';
-import WikiDataSource from './data-source/WikiDataSource';
+import YoutubeDataSource from './data-source/YoutubeDataSource';
 import fakeData from './utils/fake-data';
 
 export default class App extends React.Component {
@@ -10,7 +10,7 @@ export default class App extends React.Component {
     super(...args);
     this.categoryDataSource = new CategoryDataSource('category-list-select', fakeData.categories);
     this.reactIssueDataSource = new GitHubIssueDataSource('react-issues');
-    this.wikiDataSource = new WikiDataSource('wiki-pages');
+    this.youtubeDataSource = new YoutubeDataSource('youtube-videos');
   }
   render() {
     return (
@@ -31,15 +31,12 @@ export default class App extends React.Component {
                    dataSource={this.reactIssueDataSource}
                    sortable />
 
-        {/*
         <hr/>
-        <h1 className="text-center">Wiki pages</h1>
+        <h1 className="text-center">Youtube videos</h1>
 
-        TODO: Wiki API require CORS
-        <DataTable id="react-issue-table"
-                   dataSource={this.wikiDataSource}
+        <DataTable id="react-youtube-videos"
+                   dataSource={this.youtubeDataSource}
                    sortable />
-         */}
       </div>
     )
   }
