@@ -23,10 +23,10 @@ export default class GitHubIssueDataSource extends DataSource {
           transform: function t(value) {
             return value.map(label => {
               return (
-                <span className="label-wrapper">
-                <span className="label" style={{backgroundColor: label.color}}>{label.name}</span>
-                  {' '}
-              </span>
+                <span key={label.name} className="label-wrapper">
+                  <span className="label" style={{backgroundColor: label.color}}>{label.name}</span>
+                    {' '}
+                </span>
               )
             })
           }

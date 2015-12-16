@@ -189,7 +189,7 @@ class DataTable extends React.Component {
                onKeyPress={this.onKeyDown.bind(this)}/>
         <span className="input-group-btn">
           <button className="btn btn-primary btn-block" onClick={this.search.bind(this)}>
-            <i className="fa fa-search"></i>
+            <i className="fa fa-search"/>
           </button>
         </span>
       </div>
@@ -296,10 +296,10 @@ class DataTable extends React.Component {
       let sortIcon;
       if (sortable) {
         if (this.state.sortProperty === property && this.state.sortOrderDesc !== null) {
-          sortIcon = (this.state.sortOrderDesc ? <i className="fa fa-sort-desc"></i> :
-            <i className="fa fa-sort-asc"></i>);
+          sortIcon = (this.state.sortOrderDesc ? <i className="fa fa-sort-desc"/> :
+            <i className="fa fa-sort-asc"/>);
         } else {
-          sortIcon = <i className="fa fa-sort"></i>;
+          sortIcon = <i className="fa fa-sort"/>;
         }
       }
 
@@ -311,7 +311,7 @@ class DataTable extends React.Component {
             <li key={'filter-value-' + property + '-' + value.id}>
               <a onClick={this.filter.bind(this, property, value.id)}>
                 {this.state.filter[property] === value.id ?
-                  <i className="fa fa-dot-circle-o"></i> : <i className="fa fa-circle-o"></i>} {value.label}
+                  <i className="fa fa-dot-circle-o"/> : <i className="fa fa-circle-o"/>} {value.label}
               </a>
             </li>
           );
@@ -324,14 +324,14 @@ class DataTable extends React.Component {
                     'btn-default' : 'btn-success')}
                     data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-              <i className="fa fa-filter"></i>
+              <i className="fa fa-filter"/>
             </button>
             <ul className="dropdown-menu">
               <li>
                 <a onClick={this.filter.bind(this, property, undefined)}>
-                  <i className="fa fa-times"></i> No filter</a>
+                  <i className="fa fa-times"/> No filter</a>
               </li>
-              <li role="separator" className="divider"></li>
+              <li role="separator" className="divider"/>
               {filterItems}
             </ul>
           </div>
