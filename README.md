@@ -8,6 +8,9 @@ DEMO: http://trungdq88.github.io/react-datatable
 ## How it looks like
 <img src="screenshot.png"/>
 ## Usage
+Install
+
+    npm install --save @trungdq88/react-datatable
 
 Define a data source:
 
