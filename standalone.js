@@ -501,7 +501,7 @@ var DataTable = (function (_React$Component) {
         var filterIcon = undefined;
 
         if (propertyFilterable) {
-          var filterItems = row[3].getDataAsArray().map(function (value) {
+          var filterItems = row[3].map(function (value) {
             return _react2['default'].createElement(
               'li',
               { key: 'filter-value-' + property + '-' + value.id },
