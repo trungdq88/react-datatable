@@ -36,7 +36,7 @@ export default class App extends React.Component {
 
         <DataTable id="react-youtube-videos"
                    dataSource={this.youtubeDataSource}
-                   sortable />
+                   searchable />
       </div>
     )
   }
