@@ -16,7 +16,7 @@ export default class YoutubeDataSource extends DataSource {
         ['Image', {
           field: 'snippet',
           transform: function (snippet) {
-            return <img src={snippet.thumbnails.default.url} />;
+            return <img key={snippet.thumbnails.default.url} src={snippet.thumbnails.default.url} />;
           }
         }],
         ['Title', {
