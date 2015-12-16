@@ -405,7 +405,7 @@ var YoutubeDataSource = (function (_DataSource) {
       listFields: [['Image', {
         field: 'snippet',
         transform: function transform(snippet) {
-          return _react2['default'].createElement('img', { src: snippet.thumbnails['default'].url });
+          return _react2['default'].createElement('img', { key: snippet.thumbnails['default'].url, src: snippet.thumbnails['default'].url });
         }
       }], ['Title', {
         field: 'snippet',
