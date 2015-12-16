@@ -306,7 +306,7 @@ class DataTable extends React.Component {
       let filterIcon;
 
       if (propertyFilterable) {
-        const filterItems = row[3].getDataAsArray().map((value) => {
+        const filterItems = row[3].map((value) => {
           return (
             <li key={'filter-value-' + property + '-' + value.id}>
               <a onClick={this.filter.bind(this, property, value.id)}>

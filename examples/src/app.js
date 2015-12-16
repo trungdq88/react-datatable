@@ -1,6 +1,6 @@
 import React from 'react';
 import DataTable from '@trungdq88/react-datatable';
-import CategoryDataSource from './data-source/CategoryDataSource';
+import RestaurantDataSource from './data-source/RestaurantDataSource';
 import GitHubIssueDataSource from './data-source/GitHubIssueDataSource';
 import YoutubeDataSource from './data-source/YoutubeDataSource';
 import fakeData from './utils/fake-data';
@@ -8,7 +8,7 @@ import fakeData from './utils/fake-data';
 export default class App extends React.Component {
   constructor(...args) {
     super(...args);
-    this.categoryDataSource = new CategoryDataSource('category-list-select', fakeData.categories);
+    this.restaurantDataSource = new RestaurantDataSource('restaurant-list-select', fakeData.restaurants);
     this.reactIssueDataSource = new GitHubIssueDataSource('react-issues');
 
     const self = this;
@@ -37,7 +37,8 @@ export default class App extends React.Component {
       <div className="table">
         <h1 className="text-center">Static data</h1>
         <DataTable id="category-table"
-                   dataSource={this.categoryDataSource}
+                   perpage="5"
+                   dataSource={this.restaurantDataSource}
                    searchable
                    sortable />
 

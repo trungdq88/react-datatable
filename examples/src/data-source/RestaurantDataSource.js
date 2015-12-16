@@ -1,9 +1,10 @@
+import React from 'react';
 import {DataSource} from '@trungdq88/react-datatable';
 
 /**
  * Data source for entity with existing data
  */
-export default class CategoryDataSource extends DataSource {
+export default class RestaurantDataSource extends DataSource {
 
   constructor(name, items) {
     super(name);
@@ -11,7 +12,31 @@ export default class CategoryDataSource extends DataSource {
       keyField: 'id',
       searchFields: ['name'],
       listFields: [
-        ['Name', 'name'],
+        ['Logo', {
+          field: 'logo',
+          transform: function t(value) {
+            return <img key={value} height="100" className="img-preview" src={value}/>;
+          },
+        }, 'no-sort'],
+        ['Name', {
+          field: 'name',
+          transform: function t(value) {
+            return <a href={'#/entity/detail/dine/' + this.id}>{value}</a>;
+          },
+        }],
+        ['Price', 'price', undefined, [
+          {id: '$$ (<$30)', label: '$$ (<$30)'},
+          {id: '$$$ (<$60)', label: '$$$ (<$60)'},
+          {id: '$$$$ (<$100)', label: '$$$$ (<$100)'},
+          {id: '$$$$$ (>$100)', label: '$$$$$ (>$100)'},
+        ]],
+        ['Rates', 'num_rating'],
+        ['Created at', {
+          field: 'created_at',
+          transform: function t(value) {
+            return (new Date(value)).toUTCString();
+          },
+        }],
       ],
     };
 
@@ -24,7 +49,9 @@ export default class CategoryDataSource extends DataSource {
     let data = this.items;
     // 1. Filter
     if (filter && Object.keys(filter).length > 0) {
-      const filterFunc = item => item[this] === filter[this];
+      const filterFunc = function (item) {
+        return item[this] === filter[this]
+      };
       for (const property in filter) {
         if (property) {
           data = data.filter(filterFunc.bind(property));
