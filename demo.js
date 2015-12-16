@@ -19,9 +19,9 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactDatatable = require('react-datatable');
+var _trungdq88ReactDatatable = require('@trungdq88/react-datatable');
 
-var _reactDatatable2 = _interopRequireDefault(_reactDatatable);
+var _trungdq88ReactDatatable2 = _interopRequireDefault(_trungdq88ReactDatatable);
 
 var _dataSourceCategoryDataSource = require('./data-source/CategoryDataSource');
 
@@ -31,9 +31,9 @@ var _dataSourceGitHubIssueDataSource = require('./data-source/GitHubIssueDataSou
 
 var _dataSourceGitHubIssueDataSource2 = _interopRequireDefault(_dataSourceGitHubIssueDataSource);
 
-var _dataSourceWikiDataSource = require('./data-source/WikiDataSource');
+var _dataSourceYoutubeDataSource = require('./data-source/YoutubeDataSource');
 
-var _dataSourceWikiDataSource2 = _interopRequireDefault(_dataSourceWikiDataSource);
+var _dataSourceYoutubeDataSource2 = _interopRequireDefault(_dataSourceYoutubeDataSource);
 
 var _utilsFakeData = require('./utils/fake-data');
 
@@ -52,10 +52,30 @@ var App = (function (_React$Component) {
     _get(Object.getPrototypeOf(App.prototype), 'constructor', this).apply(this, args);
     this.categoryDataSource = new _dataSourceCategoryDataSource2['default']('category-list-select', _utilsFakeData2['default'].categories);
     this.reactIssueDataSource = new _dataSourceGitHubIssueDataSource2['default']('react-issues');
-    this.wikiDataSource = new _dataSourceWikiDataSource2['default']('wiki-pages');
+
+    var self = this;
+    var extraColumns = [['Select', {
+      'field': '',
+      transform: function t() {
+        return _react2['default'].createElement(
+          'button',
+          { onClick: self.onRowSelected.bind(self, this),
+            className: 'btn btn-primary btn-sm' },
+          'Select'
+        );
+      }
+    }, 'no-sort']];
+    this.youtubeDataSource = new _dataSourceYoutubeDataSource2['default']('youtube-videos');
+    this.youtubeDataSource.setExtraColumns(extraColumns);
   }
 
   _createClass(App, [{
+    key: 'onRowSelected',
+    value: function onRowSelected(row) {
+      alert('Clicked: ' + JSON.stringify(row));
+      console.log(row);
+    }
+  }, {
     key: 'render',
     value: function render() {
       return _react2['default'].createElement(
@@ -66,7 +86,7 @@ var App = (function (_React$Component) {
           { className: 'text-center' },
           'Static data'
         ),
-        _react2['default'].createElement(_reactDatatable2['default'], { id: 'category-table',
+        _react2['default'].createElement(_trungdq88ReactDatatable2['default'], { id: 'category-table',
           dataSource: this.categoryDataSource,
           searchable: true,
           sortable: true }),
@@ -76,9 +96,18 @@ var App = (function (_React$Component) {
           { className: 'text-center' },
           'Ajax data (React GitHub issues)'
         ),
-        _react2['default'].createElement(_reactDatatable2['default'], { id: 'react-issue-table',
+        _react2['default'].createElement(_trungdq88ReactDatatable2['default'], { id: 'react-issue-table',
           dataSource: this.reactIssueDataSource,
-          sortable: true })
+          sortable: true }),
+        _react2['default'].createElement('hr', null),
+        _react2['default'].createElement(
+          'h1',
+          { className: 'text-center' },
+          'Youtube videos (With extra columns)'
+        ),
+        _react2['default'].createElement(_trungdq88ReactDatatable2['default'], { id: 'react-youtube-videos',
+          dataSource: this.youtubeDataSource,
+          searchable: true })
       );
     }
   }]);
@@ -90,16 +119,9 @@ exports['default'] = App;
 module.exports = exports['default'];
 /*
 TODO: add adapter to integrate with GitHub API
-*/ /*
-   <hr/>
-   <h1 className="text-center">Wiki pages</h1>
-   TODO: Wiki API require CORS
-   <DataTable id="react-issue-table"
-             dataSource={this.wikiDataSource}
-             sortable />
-   */
+*/
 
-},{"./data-source/CategoryDataSource":2,"./data-source/GitHubIssueDataSource":3,"./data-source/WikiDataSource":4,"./utils/fake-data":7,"react":undefined,"react-datatable":undefined}],2:[function(require,module,exports){
+},{"./data-source/CategoryDataSource":2,"./data-source/GitHubIssueDataSource":3,"./data-source/YoutubeDataSource":4,"./utils/fake-data":7,"@trungdq88/react-datatable":undefined,"react":undefined}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -114,7 +136,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _reactDatatable = require('react-datatable');
+var _trungdq88ReactDatatable = require('@trungdq88/react-datatable');
 
 /**
  * Data source for entity with existing data
@@ -200,12 +222,12 @@ var CategoryDataSource = (function (_DataSource) {
   }]);
 
   return CategoryDataSource;
-})(_reactDatatable.DataSource);
+})(_trungdq88ReactDatatable.DataSource);
 
 exports['default'] = CategoryDataSource;
 module.exports = exports['default'];
 
-},{"react-datatable":undefined}],3:[function(require,module,exports){
+},{"@trungdq88/react-datatable":undefined}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -226,7 +248,7 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactDatatable = require('react-datatable');
+var _trungdq88ReactDatatable = require('@trungdq88/react-datatable');
 
 var _utilsApiJs = require('../utils/api.js');
 
@@ -261,7 +283,7 @@ var GitHubIssueDataSource = (function (_DataSource) {
           return value.map(function (label) {
             return _react2['default'].createElement(
               'span',
-              { className: 'label-wrapper' },
+              { key: label.name, className: 'label-wrapper' },
               _react2['default'].createElement(
                 'span',
                 { className: 'label', style: { backgroundColor: label.color } },
@@ -333,12 +355,12 @@ var GitHubIssueDataSource = (function (_DataSource) {
   }]);
 
   return GitHubIssueDataSource;
-})(_reactDatatable.DataSource);
+})(_trungdq88ReactDatatable.DataSource);
 
 exports['default'] = GitHubIssueDataSource;
 module.exports = exports['default'];
 
-},{"../utils/api.js":6,"react":undefined,"react-datatable":undefined}],4:[function(require,module,exports){
+},{"../utils/api.js":6,"@trungdq88/react-datatable":undefined,"react":undefined}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -359,7 +381,7 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactDatatable = require('react-datatable');
+var _trungdq88ReactDatatable = require('@trungdq88/react-datatable');
 
 var _utilsApiJs = require('../utils/api.js');
 
@@ -369,39 +391,60 @@ var _utilsApiJs2 = _interopRequireDefault(_utilsApiJs);
  * Data source from entity APIs
  */
 
-var WikiDataSource = (function (_DataSource) {
-  _inherits(WikiDataSource, _DataSource);
+var YoutubeDataSource = (function (_DataSource) {
+  _inherits(YoutubeDataSource, _DataSource);
 
-  function WikiDataSource(name) {
-    _classCallCheck(this, WikiDataSource);
+  function YoutubeDataSource(name) {
+    _classCallCheck(this, YoutubeDataSource);
 
-    _get(Object.getPrototypeOf(WikiDataSource.prototype), 'constructor', this).call(this, name);
+    _get(Object.getPrototypeOf(YoutubeDataSource.prototype), 'constructor', this).call(this, name);
+    this.KEY = 'AIzaSyDX0BykDy8PEIQGsFjdSVAF4gDQVNwrztI';
     this.meta = {
       keyField: 'pageid',
       searchFields: ['title'],
-      listFields: [['Title', 'title']]
+      listFields: [['Image', {
+        field: 'snippet',
+        transform: function transform(snippet) {
+          return _react2['default'].createElement('img', { src: snippet.thumbnails['default'].url });
+        }
+      }], ['Title', {
+        field: 'snippet',
+        transform: function transform(snippet) {
+          return _react2['default'].createElement(
+            'a',
+            { target: '_blank', href: 'https://www.youtube.com/watch?v=' + this.id.videoId },
+            snippet.title
+          );
+        }
+      }], ['Description', {
+        field: 'snippet',
+        transform: function transform(snippet) {
+          return snippet.description;
+        }
+      }]]
     };
     this.entity = this.meta;
     this.disableCache = false;
   }
 
-  _createClass(WikiDataSource, [{
+  _createClass(YoutubeDataSource, [{
     key: 'fetch',
     value: function fetch(page, search, sortProperty, sortOrderDesc, filter, perpage) {
       var _this = this;
 
-      var apiEndPoint = 'https://en.wikipedia.org/w/api.php?action=query&generator=allpages&prop=info';
+      var apiEndPoint = 'https://www.googleapis.com/youtube/v3/search?' + 'type=video&part=snippet&key=' + this.KEY;
       var query = "";
       // Build query
       // 1. Pagination
       // let query = '&page=' + page;
-      if (perpage) query += '&gaplimit=' + perpage;
+      if (perpage) query += '&maxResults=' + perpage;
       // 2. Search
-      // if (search) query += '&query=' + search;
-      // 3. Sort
-      if (sortProperty && sortOrderDesc !== null) {
-        query += '&gapdir=' + (sortOrderDesc ? 'descending' : 'ascending');
-      }
+      if (search) query += '&q=' + search;
+      // 3. Sort # Youtube API does not support multi direction sorting
+      //if (sortProperty && sortOrderDesc !== null) {
+      //  query += '&order=' + sortProperty +
+      //    '&direction=' + (sortOrderDesc ? 'desc' : 'asc');
+      //}
       // 4. Filter
       //if (filter && Object.keys(filter).length > 0) {
       //  query += Object.keys(filter).map((property) => {
@@ -409,16 +452,14 @@ var WikiDataSource = (function (_DataSource) {
       //  });
       //}
 
-      _utilsApiJs2['default'].get(apiEndPoint + '?' + query, {}).done(function (response) {
-        results = Object.keys(response.query.pages).map(function (key) {
-          return response.query.pages[key];
-        });
+      _utilsApiJs2['default'].get(apiEndPoint + query, {}).done(function (response) {
+        var results = response.items;
         // Set data
         _this.data = {
           page: page,
-          total: undefined,
+          total: 1, // TODO: react-datatable does not work well with cursor based pagination. Need improve this.
           entities: results,
-          perpage: perpage || _this.DEFAULT_PER_PAGE,
+          perpage: response.pageInfo.resultsPerPage,
           search: search,
           sortProperty: sortProperty,
           sortOrderDesc: sortOrderDesc
@@ -432,13 +473,13 @@ var WikiDataSource = (function (_DataSource) {
     }
   }]);
 
-  return WikiDataSource;
-})(_reactDatatable.DataSource);
+  return YoutubeDataSource;
+})(_trungdq88ReactDatatable.DataSource);
 
-exports['default'] = WikiDataSource;
+exports['default'] = YoutubeDataSource;
 module.exports = exports['default'];
 
-},{"../utils/api.js":6,"react":undefined,"react-datatable":undefined}],5:[function(require,module,exports){
+},{"../utils/api.js":6,"@trungdq88/react-datatable":undefined,"react":undefined}],5:[function(require,module,exports){
 /**
  * Created by dinhquangtrung on 12/14/15.
  */

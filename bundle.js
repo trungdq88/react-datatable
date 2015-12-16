@@ -216,7 +216,7 @@ var FriendlyLoader = (function (_React$Component) {
 exports['default'] = FriendlyLoader;
 module.exports = exports['default'];
 
-},{"react":undefined}],"react-datatable":[function(require,module,exports){
+},{"react":undefined}],"@trungdq88/react-datatable":[function(require,module,exports){
 /**
  * Created by dinhquangtrung on 9/28/15.
  */
