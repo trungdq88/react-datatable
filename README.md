@@ -19,6 +19,7 @@ Be patience, it takes few steps to get make a minimum example but it totally wor
 Say I want to create a Restaurant list to DataTable, I first create a DataSource 
 class which tells the DataTable where do I get the data from.
 
+```js
     import { DataSource } from '@trungdq88/react-datatable';
     
     // Don't forget to extends from DataSource
@@ -53,21 +54,28 @@ class which tells the DataTable where do I get the data from.
         this.trigger('change');
       }
     }
+```
 
 ### 2. Create a data source object
 Create a data source object from RestaurantDataSource class with data
 
+```js
     this.restaurantDataSource = new RestaurantDataSource('restaurants', [
         {name: 'Japanese food'},
         {name: 'Vietnamese food'},
         {name: 'Thai food'},
     ]);
+```
 
 ### 3. Create DataTable component:
 In your `render()` method:
     
+```js
     <DataTable id="restaurants-table"
                dataSource={this.restaurantDataSource} />
+```
+
+Your data table should be displayed right now.
 
 ## Customize the table
 `DataSource` is the heart of DataTable. It can be customized a lot to serve various data
@@ -79,6 +87,7 @@ it tells the `DataTable` how to display data correctly.
 
 Say, my data is an array of same schema objects:
 
+```js
     [
         {
             id: 'VX129',
@@ -93,9 +102,11 @@ Say, my data is an array of same schema objects:
             img: 'http://abc.com/some_image.png',
         }
     ]
+```
 
 This is the `meta` object for that data:
 
+```js
         this.meta = {
           keyField: 'id',
           searchFields: ['name'],
@@ -105,12 +116,15 @@ This is the `meta` object for that data:
             ['Price', 'price'],
           ],
         };
+```
 
 DataTable display:
 
+```js
     # | Name                | Price
     1 | Vietnamese food     | $$$$ (<100$)
     2 | Food food           | $$$ (<60$)
+```
 
 **Notice**: the data **must be an array**, and all the objects in that array must share 
 the **same schema**.
@@ -122,6 +136,7 @@ will be display on `DataTable` (which property name displays in which column Hea
 
 In some cases, we need more advanced method to customize the data displayed (for example display an image instead of regular text. That where we use the `transform` object.
 
+```js
           listFields: [
             // Format: [{Heading text}, {Property name}]
             ['Image', {
@@ -136,11 +151,13 @@ In some cases, we need more advanced method to customize the data displayed (for
             ['Name', 'name'],
             ['Price', 'price'],
           ],
+```
 
 The `transform` function also receive the context (`this` variable) of the parent data
 object, that means you can reference to other property inside that transform object.
 In the example bellow, I added a link (using `id` property) to "Name" column:
 
+```js
           listFields: [
             ['Image', {
                 field: 'img',
@@ -155,10 +172,12 @@ In the example bellow, I added a link (using `id` property) to "Name" column:
                 }
             }],
           ],
+```
 
 ### The `this.fetch` method.
 As you can see in `RestaurantDataSource`, the fetch method only assign data to `this.data` and trigger `change` event. In fact, the `fetch` methods accept various parameters. See this in the `DataSource` class source code.
 
+```js
       /**
        * Start to fetch data (via API or whatever)
        * Please implement this method to get data from any API endpoint
@@ -177,11 +196,12 @@ As you can see in `RestaurantDataSource`, the fetch method only assign data to `
       fetch(page, search, sortProperty, sortOrderDesc, filter, perpage) {
         console.error('Not implemented!');
       }
+```
 
 So basically, you can create a data source that get data every where. Check this example 
 on get data from Github issue API
 
-
+```js
       fetch(page, search, sortProperty, sortOrderDesc, filter, perpage) {
         const apiEndPoint = 'https://api.github.com/repos/facebook/react/issues';
 
@@ -226,6 +246,7 @@ on get data from Github issue API
           }).fail(() => {
           this.trigger('failed');
         });
+```
 
 More example on how to use `DataSource` please see in `examples/src`
 
@@ -234,6 +255,7 @@ More example on how to use `DataSource` please see in `examples/src`
 Searchable fields is setted in `meta` object with `searchFields {array({string}))` 
 property.
 
+```js
         this.meta = {
           keyField: 'id',
           // Array of property name that will be used for search
@@ -241,13 +263,16 @@ property.
           listFields: [
             ...
           ]
+```
 
 In order to display a search box to the top of the table, add `searchable` property to
 `<DataTable>` element.
 
+```js
     <DataTable id="restaurants-table"
                dataSource={this.restaurantDataSource} 
                searchable />
+```
 
 When user click search button, the `fetch` method will be called with `search` parameter contains the keyword entered in the search box.
 
@@ -257,33 +282,40 @@ By default, all the property is sortable. If `<DataTable>` has `sortable` proper
 will display a sort icon right next to the column header, clicking to the sort icon will
 trigger the `fetch` method with `sortProperty` and `sortOrderDesc` param.
 
+```js
     <DataTable id="restaurants-table"
                dataSource={this.restaurantDataSource} 
                searchable
                sortable />
+```
 
 If you want to disable sorting for a speficic column, add a 'no-sort' string to the 3-rd 
 element in `listFields` item:
 
+```js
             ['Image', {
                 field: 'img',
                 transform: function (img) {
                     return <img src={img} />;
                 },
             }, 'no-sort'],
+```
 
 You can use `true` instead of `no-sort` string, as long as the value is not `undefined`.
 
+```js
     if (listField[2] === undefined) {
         // Display sort icon
     } else {
         // Hide sort icon
     }
+```
 
 ### Filter
 
 You can define the filter value for a specific column by adding a 4-th element in `listFields` item:
 
+```js
       listFields: [
         ['Image', {
             field: 'img',
@@ -304,24 +336,30 @@ You can define the filter value for a specific column by adding a 4-th element i
           {id: '$$$$$ (>$100)', label: '$$$$$ (>$100)'},
         ]]
       ]
+```
 
 Filter setting is an array of objects, which must follow this schema:
 
+```js
     {
         id: '',     // Id value of the filter
         label: '',  // Label to display in DataTable
     }
+```
 
 **Handle filter in `fetch` method**: fetch method will receive a `filter` object
 
+```js
     {
         propertyName1: propertyValue1,
         propertyName2: propertyValue2,
         ...
     }
+```
 
 See an example on filtering data in `fetch` method:
 
+```js
       fetch(page, search, sortProperty, sortOrderDesc, filter, perpage) {
         let data = this.items;
         // 1. Filter
@@ -336,6 +374,7 @@ See an example on filtering data in `fetch` method:
           }
         }
       ...
+```
 
 ### Extra columns
 
@@ -343,6 +382,7 @@ In some cases, you might want to add extra columns, for example add a "Edit", "R
 button to the last column. Create a `extraColumns` array to describe the column you 
 want to add and then call `dataSource.setExtraColumns` to add the column.
 
+```js
     this.restaurantDataSource = new RestaurantDataSource(
         'restaurant', fakeData.restaurants);
     
@@ -362,6 +402,7 @@ want to add and then call `dataSource.setExtraColumns` to add the column.
       }, 'no-sort'],
     ];
     this.restaurantDataSource.setExtraColumns(extraColumns);
+```
 
 Basically, `DataSource` will concat the `extraColumns` with `listFields` and return 
 to DataTable, therefore all the rules applied for `listFields` is the same with 
