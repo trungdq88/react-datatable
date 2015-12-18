@@ -21,23 +21,38 @@ var _eventEmitter2 = _interopRequireDefault(_eventEmitter);
  * Abstract class
  * Contains:
  * - Data source for DataTable (API or existing array of elements)
- * - List of fields to display on DataTable
+ * - Field schema to display on DataTable
  */
 
 var DataSource = (function () {
+
+  /**
+   * Each data source should have a unique name to make the debug
+   * process easier
+   */
+
   function DataSource(name) {
     _classCallCheck(this, DataSource);
 
+    // Constants
     this.DEFAULT_PER_PAGE = 10;
+
+    // Private variables
+    this._event = (0, _eventEmitter2['default'])({});
+
+    // Public variables
+    this.meta = undefined;
     this.name = name;
     this.data = [];
-    this._event = (0, _eventEmitter2['default'])({});
-    this.extraParams = {};
     this.extraColums = [];
   }
 
   /**
    * Start to fetch data (via API or whatever)
+   * Please implement this method to get data from any API endpoint
+   * or from a static array. This method should assign the `this.data`
+   * variable in the right schema which later will be get from `this.get()`
+   * method.
    */
 
   _createClass(DataSource, [{
@@ -47,17 +62,20 @@ var DataSource = (function () {
     }
 
     /**
-     * Return fields schema to display on DataTable
+     * Return fields from schema to display on DataTable concat
+     * with extraColumns if any.
+     * Read documentation for list fields schema.
+     * (extraColumns also follow the list fields schema)
      */
   }, {
     key: 'getFields',
     value: function getFields() {
-      console.error('Not implemented!');
+      return this.meta.listFields.concat(this.extraColums);
     }
 
     /**
-     * Asynchronously get current fetched data
-     * Should return:
+     * Get current fetched data
+     * `this.data` should returns an object with following properties:
      * - total: total entity number
      * - page: current page
      * - entities: entities for current page
@@ -70,6 +88,11 @@ var DataSource = (function () {
     key: 'get',
     value: function get() {
       return this.data;
+    }
+  }, {
+    key: 'setExtraColumns',
+    value: function setExtraColumns(extraColumns) {
+      this.extraColums = extraColumns;
     }
 
     /**
@@ -97,27 +120,6 @@ var DataSource = (function () {
     key: 'trigger',
     value: function trigger() {
       this._event.emit.apply(this._event, arguments);
-    }
-  }, {
-    key: 'getFields',
-    value: function getFields() {
-      return this.entity.listFields.concat(this.extraColums);
-    }
-  }, {
-    key: 'setExtraColumns',
-    value: function setExtraColumns(extraColumns) {
-      this.extraColums = extraColumns;
-    }
-
-    /**
-     * Received extra param objects {key: String, value: String}
-     * These params will be append to API call.
-     * @param params
-     */
-  }, {
-    key: 'setExtraParams',
-    value: function setExtraParams(params) {
-      this.extraParams = params;
     }
   }]);
 
@@ -437,8 +439,8 @@ var DataTable = (function (_React$Component) {
     key: 'renderSearchbox',
     value: function renderSearchbox() {
       var placeholder = 'Search...';
-      if (this.dataSource.entity.searchFields) {
-        placeholder = 'Search ' + this.dataSource.entity.searchFields.join(', ').replace(/_/g, ' ') + '...';
+      if (this.dataSource.meta.searchFields) {
+        placeholder = 'Search ' + this.dataSource.meta.searchFields.join(', ').replace(/_/g, ' ') + '...';
       }
       return _react2['default'].createElement(
         'div',

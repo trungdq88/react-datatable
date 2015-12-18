@@ -64,11 +64,6 @@ export default class GitHubIssueDataSource extends DataSource {
     //    return '&' + property + '=' + filter[property];
     //  });
     //}
-    // 5. Extra params
-    if (Object.keys(this.extraParams).length) {
-      query += '&' + Object.keys(this.extraParams).map((key) =>
-        key + '=' + this.extraParams[key]).join('&');
-    }
 
     api.get(apiEndPoint + '?' + query, {}, this.disableCache)
       .done((response) => {

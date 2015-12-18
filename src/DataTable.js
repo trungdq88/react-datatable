@@ -251,8 +251,8 @@ class DataTable extends React.Component {
    */
   renderSearchbox() {
     let placeholder = 'Search...';
-    if (this.dataSource.entity.searchFields) {
-      placeholder = 'Search ' + this.dataSource.entity
+    if (this.dataSource.meta.searchFields) {
+      placeholder = 'Search ' + this.dataSource.meta
           .searchFields.join(', ').replace(/_/g, ' ') + '...';
     }
     return (

@@ -41,7 +41,6 @@ export default class RestaurantDataSource extends DataSource {
     };
 
     this.items = items;
-    this.entity = this.meta;
     this.extraColums = [];
   }
 
@@ -60,7 +59,7 @@ export default class RestaurantDataSource extends DataSource {
     }
     // 2. Search
     if (search) {
-      const searchFields = this.entity.searchFields;
+      const searchFields = this.meta.searchFields;
       data = data.filter((item) => {
         for (let i = 0; i < searchFields.length; i++) {
           if (item[searchFields[i]].toLowerCase()
