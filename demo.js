@@ -50,13 +50,31 @@ var App = (function (_React$Component) {
     }
 
     _get(Object.getPrototypeOf(App.prototype), 'constructor', this).apply(this, args);
+    // Restaurant example
     this.restaurantDataSource = new _dataSourceRestaurantDataSource2['default']('restaurant-list-select', _utilsFakeData2['default'].restaurants);
+    var onOrderRestaurant = function onOrderRestaurant(restaurant) {
+      alert('Order placed for ' + restaurant.name);
+    };
+    var extraColumns = [['Action', {
+      'field': '',
+      transform: function transform() {
+        return _react2['default'].createElement(
+          'button',
+          { onClick: onOrderRestaurant.bind(self, this),
+            className: 'btn btn-primary btn-sm' },
+          'Order this restaurant'
+        );
+      }
+    }, 'no-sort']];
+    this.restaurantDataSource.setExtraColumns(extraColumns);
+
+    // Github issue example
     this.reactIssueDataSource = new _dataSourceGitHubIssueDataSource2['default']('react-issues');
 
     var self = this;
-    var extraColumns = [['Select', {
+    var extraColumns2 = [['Select', {
       'field': '',
-      transform: function t() {
+      transform: function transform() {
         return _react2['default'].createElement(
           'button',
           { onClick: self.onRowSelected.bind(self, this),
@@ -65,8 +83,10 @@ var App = (function (_React$Component) {
         );
       }
     }, 'no-sort']];
+
+    // Youtube example
     this.youtubeDataSource = new _dataSourceYoutubeDataSource2['default']('youtube-videos');
-    this.youtubeDataSource.setExtraColumns(extraColumns);
+    this.youtubeDataSource.setExtraColumns(extraColumns2);
   }
 
   _createClass(App, [{
@@ -87,7 +107,7 @@ var App = (function (_React$Component) {
           'Static data'
         ),
         _react2['default'].createElement(_trungdq88ReactDatatable2['default'], { id: 'category-table',
-          perpage: '5',
+          perpage: 5,
           dataSource: this.restaurantDataSource,
           searchable: true,
           sortable: true }),
@@ -95,7 +115,7 @@ var App = (function (_React$Component) {
         _react2['default'].createElement(
           'h1',
           { className: 'text-center' },
-          'Ajax data (React GitHub issues)'
+          'Github issues of ReactJS (Ajax data)'
         ),
         _react2['default'].createElement(_trungdq88ReactDatatable2['default'], { id: 'react-issue-table',
           dataSource: this.reactIssueDataSource,
@@ -118,9 +138,6 @@ var App = (function (_React$Component) {
 
 exports['default'] = App;
 module.exports = exports['default'];
-/*
-TODO: add adapter to integrate with GitHub API
-*/
 
 },{"./data-source/GitHubIssueDataSource":2,"./data-source/RestaurantDataSource":3,"./data-source/YoutubeDataSource":4,"./utils/fake-data":7,"@trungdq88/react-datatable":undefined,"react":undefined}],2:[function(require,module,exports){
 'use strict';
@@ -222,12 +239,6 @@ var GitHubIssueDataSource = (function (_DataSource) {
       //    return '&' + property + '=' + filter[property];
       //  });
       //}
-      // 5. Extra params
-      if (Object.keys(this.extraParams).length) {
-        query += '&' + Object.keys(this.extraParams).map(function (key) {
-          return key + '=' + _this.extraParams[key];
-        }).join('&');
-      }
 
       _utilsApiJs2['default'].get(apiEndPoint + '?' + query, {}, this.disableCache).done(function (response) {
         // Set data
@@ -315,7 +326,6 @@ var RestaurantDataSource = (function (_DataSource) {
     };
 
     this.items = items;
-    this.entity = this.meta;
     this.extraColums = [];
   }
 
@@ -339,7 +349,7 @@ var RestaurantDataSource = (function (_DataSource) {
       // 2. Search
       if (search) {
         (function () {
-          var searchFields = _this.entity.searchFields;
+          var searchFields = _this.meta.searchFields;
           data = data.filter(function (item) {
             for (var i = 0; i < searchFields.length; i++) {
               if (item[searchFields[i]].toLowerCase().indexOf(search.toLowerCase()) > -1) {
