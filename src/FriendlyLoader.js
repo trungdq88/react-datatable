@@ -4,6 +4,9 @@
 
 import React from 'react';
 
+/**
+ * Simple component to display loading message
+ */
 export default class FriendlyLoader extends React.Component {
   constructor(...args) {
     super(...args);
