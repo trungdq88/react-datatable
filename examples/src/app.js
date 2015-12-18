@@ -8,14 +8,32 @@ import fakeData from './utils/fake-data';
 export default class App extends React.Component {
   constructor(...args) {
     super(...args);
+    // Restaurant example
     this.restaurantDataSource = new RestaurantDataSource('restaurant-list-select', fakeData.restaurants);
+    const onOrderRestaurant = (restaurant) => {
+        alert('Order placed for ' + restaurant.name);
+    }
+    const extraColumns = [
+      ['Action', {
+        'field': '',
+        transform: function () {
+          return (
+            <button onClick={onOrderRestaurant.bind(self, this)}
+                    className="btn btn-primary btn-sm">Order this restaurant</button>
+          );
+        },
+      }, 'no-sort'],
+    ];
+    this.restaurantDataSource.setExtraColumns(extraColumns);
+
+    // Github issue example
     this.reactIssueDataSource = new GitHubIssueDataSource('react-issues');
 
     const self = this;
-    const extraColumns = [
+    const extraColumns2 = [
       ['Select', {
         'field': '',
-        transform: function t() {
+        transform: function () {
           return (
             <button onClick={self.onRowSelected.bind(self, this)}
                     className="btn btn-primary btn-sm">Select</button>
@@ -23,8 +41,10 @@ export default class App extends React.Component {
         },
       }, 'no-sort'],
     ];
+
+    // Youtube example
     this.youtubeDataSource = new YoutubeDataSource('youtube-videos');
-    this.youtubeDataSource.setExtraColumns(extraColumns);
+    this.youtubeDataSource.setExtraColumns(extraColumns2);
   }
 
   onRowSelected(row) {
@@ -44,10 +64,7 @@ export default class App extends React.Component {
 
         <hr/>
 
-        <h1 className="text-center">Ajax data (React GitHub issues)</h1>
-        {/*
-        TODO: add adapter to integrate with GitHub API
-        */}
+        <h1 className="text-center">Github issues of ReactJS (Ajax data)</h1>
         <DataTable id="react-issue-table"
                    dataSource={this.reactIssueDataSource}
                    sortable />

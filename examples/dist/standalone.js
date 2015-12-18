@@ -53,11 +53,20 @@ var DataSource = (function () {
    * or from a static array. This method should assign the `this.data`
    * variable in the right schema which later will be get from `this.get()`
    * method.
+   *
+   * Call `this.trigger('change')` when the data is loaded
+   * Call `this.trigger('failed')` when the data is failed to load
+   * 
+   * @page {number} requested page number
+   * @search {string} keyword entered in search box
+   * @sortProperty {string} property of the column that need to be sorted
+   * @sortOrderDesc {boolean} equals `true` if sort in Desc order, `false` = Asc
+   * @perpage {number} number of items to displayed in one page
    */
 
   _createClass(DataSource, [{
     key: 'fetch',
-    value: function fetch() {
+    value: function fetch(page, search, sortProperty, sortOrderDesc, filter, perpage) {
       console.error('Not implemented!');
     }
 
@@ -762,6 +771,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== 'function' 
 var _react = (typeof window !== "undefined" ? window['React'] : typeof global !== "undefined" ? global['React'] : null);
 
 var _react2 = _interopRequireDefault(_react);
+
+/**
+ * Simple component to display loading message
+ */
 
 var FriendlyLoader = (function (_React$Component) {
   _inherits(FriendlyLoader, _React$Component);
