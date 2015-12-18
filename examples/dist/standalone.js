@@ -166,9 +166,17 @@ var _DataSource = require('./DataSource');
 var _DataSource2 = _interopRequireDefault(_DataSource);
 
 /**
- * Usage
- * const dataSource = new EntityDataSource('coupon-stores-add', 'store');
- * <DataTable id={'list-facilities-data-table'} dataSource={dataSource} perpage="15" />
+ * Available properties:
+ * - id: HTML id attribute for <table> element
+ * - perpage: Number of item to display perpage
+ * - dataSource: DataSource object to provide data
+ * - query: default query which contains filter settings. This is used for friendly-url 
+ *   when attach a DataTable to a page. See documentation for detail.
+ * - onQueryChange(query): callback to receive filter settings when it changes.
+ * - sortable: boolean: allow columns to be sortable or not. Sortable fields are defined
+ *   in DataSource object
+ * - searchable: boolean: add a searchbox at top of table. Search fields are defined in
+ *   DataSource object
  */
 
 var DataTable = (function (_React$Component) {
@@ -182,9 +190,13 @@ var DataTable = (function (_React$Component) {
     }
 
     _get(Object.getPrototypeOf(DataTable.prototype), 'constructor', this).apply(this, args);
+
+    // Default values
     this.DEFAULT_PER_PAGE = 10;
     this.PAGES_BEFORE = 3;
     this.PAGES_AFTER = 4;
+
+    // Default state
     this.state = {
       total: 0,
       entities: [],
@@ -198,14 +210,24 @@ var DataTable = (function (_React$Component) {
       failed: false
     };
 
+    // Set data source
     this.dataSource = this.props.dataSource;
+
+    // If query object is provided, load filter settings from query
     if (this.props.query) {
       this.setFilter(this.props.query);
     }
 
+    // References to helper
     this.onDataChange = this._onDataChange.bind(this);
     this.onDataFailed = this._onDataFailed.bind(this);
   }
+
+  // Property types
+
+  /**
+   * Bind event from data source when component is mounted
+   */
 
   _createClass(DataTable, [{
     key: 'componentDidMount',
@@ -214,19 +236,31 @@ var DataTable = (function (_React$Component) {
       this.dataSource.bind('failed', this.onDataFailed);
       this.fetch();
     }
+
+    /**
+     * Unbind event when component is going to be unmounted
+     */
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       this.dataSource.unbind('change', this.onDataChange);
       this.dataSource.unbind('failed', this.onDataFailed);
     }
+
+    /**
+     * Handle Enter key from search box
+     */
   }, {
-    key: 'onKeyDown',
-    value: function onKeyDown(e) {
+    key: 'onSearchBoxKeydown',
+    value: function onSearchBoxKeydown(e) {
       if (e.nativeEvent.keyCode === 13) {
         this.search();
       }
     }
+
+    /**
+     * Set filter from query object
+     */
   }, {
     key: 'setFilter',
     value: function setFilter(query) {
@@ -237,6 +271,10 @@ var DataTable = (function (_React$Component) {
       this.state.sortOrderDesc = query.sortOrderDesc;
       this.state.filter = query.filter;
     }
+
+    /**
+     * Retrieve query object from current filter settings
+     */
   }, {
     key: 'getFilterQuery',
     value: function getFilterQuery() {
@@ -249,19 +287,32 @@ var DataTable = (function (_React$Component) {
         filter: this.state.filter
       };
     }
+
+    /**
+     * Return true if current filter settings is not changed
+     */
   }, {
     key: 'isFilterQueryChanged',
     value: function isFilterQueryChanged() {
       return !(this.state.page === 1 && this.state.search === undefined && this.state.perpage === this.DEFAULT_PER_PAGE && this.state.sortProperty === undefined && this.state.sortOrderDesc === true && Object.keys(this.state.filter).length === 0);
     }
+
+    /**
+     * Send fetching request to get data from data source
+     */
   }, {
     key: 'fetch',
     value: function fetch() {
       this.dataSource.fetch(this.state.page, this.state.search, this.state.sortProperty, this.state.sortOrderDesc, this.state.filter, this.state.perpage);
     }
+
+    /**
+     * Handle data from data source changed
+     */
   }, {
     key: '_onDataChange',
     value: function _onDataChange() {
+      // Get data from data sources
       var data = this.dataSource.get();
       this.state.total = data.total;
       this.state.entities = data.entities;
@@ -273,10 +324,16 @@ var DataTable = (function (_React$Component) {
       this.setState({
         doneLoading: true
       });
+
+      // Dispatch event if query changed
       if (this.isFilterQueryChanged()) {
         this.props.onQueryChange && this.props.onQueryChange(this.getFilterQuery());
       }
     }
+
+    /**
+     * Handle data failed
+     */
   }, {
     key: '_onDataFailed',
     value: function _onDataFailed() {
@@ -284,6 +341,11 @@ var DataTable = (function (_React$Component) {
         failed: true
       });
     }
+
+    /**
+     * Send search request.
+     * Return to page 1 when search
+     */
   }, {
     key: 'search',
     value: function search() {
@@ -293,21 +355,34 @@ var DataTable = (function (_React$Component) {
       this.forceUpdate();
       this.fetch();
     }
+
+    /**
+     * 
+     * @sortProperty {string}: property name to be sort 
+     * @sortable {boolean}: identify if the property should be sorted
+     */
   }, {
     key: 'sort',
     value: function sort(sortProperty, sortable) {
       if (sortable) {
+        // Do the 3-state switching: asc/desc/none
         if (this.state.sortProperty === sortProperty) {
           if (this.state.sortOrderDesc === false) this.state.sortOrderDesc = true;else if (this.state.sortOrderDesc === true) this.state.sortOrderDesc = null;else if (this.state.sortOrderDesc === null) this.state.sortOrderDesc = false;
         } else {
           this.state.sortOrderDesc = false;
         }
+
+        // Send sort request
         this.state.sortProperty = sortProperty;
         this.state.doneLoading = false;
         this.forceUpdate();
         this.fetch();
       }
     }
+
+    /**
+     * Load new page
+     */
   }, {
     key: 'goToPage',
     value: function goToPage(pageNum) {
@@ -318,28 +393,46 @@ var DataTable = (function (_React$Component) {
       });
       this.fetch();
     }
+
+    /**
+     * Handle search keyword change
+     */
   }, {
-    key: 'changeSearchKeyword',
-    value: function changeSearchKeyword(e) {
+    key: 'onSearchKeywordChanged',
+    value: function onSearchKeywordChanged(e) {
       this.setState({
         search: e.target.value
       });
     }
+
+    /**
+     * Filter results
+     *
+     * @property {string}: property name used for filter
+     * @value {string}: value of the property that should only be shown
+     */
   }, {
     key: 'filter',
     value: function filter(property, value) {
       if (property) {
+        // Construct the `filter` object
         if (value === undefined) {
           delete this.state.filter[property];
         } else {
           this.state.filter[property] = value;
         }
+
+        // Send filter request
         this.state.doneLoading = false;
         this.state.page = 1;
         this.forceUpdate();
         this.fetch();
       }
     }
+
+    /**
+     * Render search box
+     */
   }, {
     key: 'renderSearchbox',
     value: function renderSearchbox() {
@@ -354,8 +447,8 @@ var DataTable = (function (_React$Component) {
           className: 'form-control',
           placeholder: placeholder,
           value: this.state.search,
-          onChange: this.changeSearchKeyword.bind(this),
-          onKeyPress: this.onKeyDown.bind(this) }),
+          onChange: this.onSearchKeywordChanged.bind(this),
+          onKeyPress: this.onSearchBoxKeydown.bind(this) }),
         _react2['default'].createElement(
           'span',
           { className: 'input-group-btn' },
@@ -367,6 +460,10 @@ var DataTable = (function (_React$Component) {
         )
       );
     }
+
+    /**
+     * Render pagination
+     */
   }, {
     key: 'renderPaging',
     value: function renderPaging() {
@@ -481,12 +578,13 @@ var DataTable = (function (_React$Component) {
         );
       });
 
-      // Generate header, including sort, filter button if needed
+      // Generate header row, including sort, filter button if needed
       var headings = fields.map(function (row, index) {
         var heading = row[0];
         var property = typeof row[1] === 'string' ? row[1] : row[1].field;
         var propertySortable = row[2] === undefined;
         var propertyFilterable = row[3] !== undefined;
+
         // Show sort icon if the list is defined as sortable and current field is sortable
         var sortable = _this.props.sortable && propertySortable;
         var sortIcon = undefined;
@@ -498,8 +596,8 @@ var DataTable = (function (_React$Component) {
           }
         }
 
+        // Render filter icons
         var filterIcon = undefined;
-
         if (propertyFilterable) {
           var filterItems = row[3].map(function (value) {
             return _react2['default'].createElement(
@@ -621,6 +719,16 @@ var DataTable = (function (_React$Component) {
 
   return DataTable;
 })(_react2['default'].Component);
+
+DataTable.propTypes = {
+  id: _react2['default'].PropTypes.string.isRequired,
+  dataSource: _react2['default'].PropTypes.object.isRequired,
+  perpage: _react2['default'].PropTypes.number,
+  query: _react2['default'].PropTypes.string,
+  onQueryChange: _react2['default'].PropTypes.func,
+  sortable: _react2['default'].PropTypes.bool,
+  searchable: _react2['default'].PropTypes.bool
+};
 
 DataTable.DataSource = _DataSource2['default'];
 exports['default'] = DataTable;

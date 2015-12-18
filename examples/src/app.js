@@ -37,7 +37,7 @@ export default class App extends React.Component {
       <div className="table">
         <h1 className="text-center">Static data</h1>
         <DataTable id="category-table"
-                   perpage="5"
+                   perpage={5}
                    dataSource={this.restaurantDataSource}
                    searchable
                    sortable />

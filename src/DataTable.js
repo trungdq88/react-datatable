@@ -8,16 +8,28 @@ import FriendlyLoader from './FriendlyLoader.js';
 import DataSource from './DataSource';
 
 /**
- * Usage
- * const dataSource = new EntityDataSource('coupon-stores-add', 'store');
- * <DataTable id={'list-facilities-data-table'} dataSource={dataSource} perpage="15" />
+ * Available properties:
+ * - id: HTML id attribute for <table> element
+ * - perpage: Number of item to display perpage
+ * - dataSource: DataSource object to provide data
+ * - query: default query which contains filter settings. This is used for friendly-url 
+ *   when attach a DataTable to a page. See documentation for detail.
+ * - onQueryChange(query): callback to receive filter settings when it changes.
+ * - sortable: boolean: allow columns to be sortable or not. Sortable fields are defined
+ *   in DataSource object
+ * - searchable: boolean: add a searchbox at top of table. Search fields are defined in
+ *   DataSource object
  */
 class DataTable extends React.Component {
   constructor(...args) {
     super(...args);
+
+    // Default values
     this.DEFAULT_PER_PAGE = 10;
     this.PAGES_BEFORE = 3;
     this.PAGES_AFTER = 4;
+
+    // Default state
     this.state = {
       total: 0,
       entities: [],
@@ -31,32 +43,48 @@ class DataTable extends React.Component {
       failed: false,
     };
 
+    // Set data source
     this.dataSource = this.props.dataSource;
+
+    // If query object is provided, load filter settings from query
     if (this.props.query) {
       this.setFilter(this.props.query);
     }
 
+    // References to helper
     this.onDataChange = this._onDataChange.bind(this);
     this.onDataFailed = this._onDataFailed.bind(this);
   }
 
+  /**
+   * Bind event from data source when component is mounted
+   */
   componentDidMount() {
     this.dataSource.bind('change', this.onDataChange);
     this.dataSource.bind('failed', this.onDataFailed);
     this.fetch();
   }
 
+  /**
+   * Unbind event when component is going to be unmounted
+   */
   componentWillUnmount() {
     this.dataSource.unbind('change', this.onDataChange);
     this.dataSource.unbind('failed', this.onDataFailed);
   }
 
-  onKeyDown(e) {
+  /**
+   * Handle Enter key from search box
+   */
+  onSearchBoxKeydown(e) {
     if (e.nativeEvent.keyCode === 13) {
       this.search();
     }
   }
 
+  /**
+   * Set filter from query object
+   */
   setFilter(query) {
     this.state.page = query.page;
     this.state.search = query.search;
@@ -66,6 +94,9 @@ class DataTable extends React.Component {
     this.state.filter = query.filter;
   }
 
+  /**
+   * Retrieve query object from current filter settings
+   */
   getFilterQuery() {
     return {
       page: this.state.page,
@@ -77,6 +108,9 @@ class DataTable extends React.Component {
     };
   }
 
+  /**
+   * Return true if current filter settings is not changed
+   */
   isFilterQueryChanged() {
     return !(this.state.page === 1 &&
     this.state.search === undefined &&
@@ -86,6 +120,9 @@ class DataTable extends React.Component {
     Object.keys(this.state.filter).length === 0);
   }
 
+  /**
+   * Send fetching request to get data from data source
+   */
   fetch() {
     this.dataSource.fetch(
       this.state.page,
@@ -97,7 +134,11 @@ class DataTable extends React.Component {
     );
   }
 
+  /**
+   * Handle data from data source changed
+   */
   _onDataChange() {
+    // Get data from data sources
     const data = this.dataSource.get();
     this.state.total = data.total;
     this.state.entities = data.entities;
@@ -109,17 +150,26 @@ class DataTable extends React.Component {
     this.setState({
       doneLoading: true,
     });
+
+    // Dispatch event if query changed
     if (this.isFilterQueryChanged()) {
       this.props.onQueryChange && this.props.onQueryChange(this.getFilterQuery());
     }
   }
 
+  /**
+   * Handle data failed
+   */
   _onDataFailed() {
     this.setState({
       failed: true,
     });
   }
 
+  /**
+   * Send search request.
+   * Return to page 1 when search
+   */
   search() {
     // Set to page 1 when trigger search.
     this.state.doneLoading = false;
@@ -128,8 +178,14 @@ class DataTable extends React.Component {
     this.fetch();
   }
 
+  /**
+   * 
+   * @sortProperty {string}: property name to be sort 
+   * @sortable {boolean}: identify if the property should be sorted
+   */
   sort(sortProperty, sortable) {
     if (sortable) {
+      // Do the 3-state switching: asc/desc/none
       if (this.state.sortProperty === sortProperty) {
         if (this.state.sortOrderDesc === false) this.state.sortOrderDesc = true;
         else if (this.state.sortOrderDesc === true) this.state.sortOrderDesc = null;
@@ -137,6 +193,8 @@ class DataTable extends React.Component {
       } else {
         this.state.sortOrderDesc = false;
       }
+
+      // Send sort request
       this.state.sortProperty = sortProperty;
       this.state.doneLoading = false;
       this.forceUpdate();
@@ -144,6 +202,9 @@ class DataTable extends React.Component {
     }
   }
 
+  /**
+   * Load new page
+   */
   goToPage(pageNum) {
     this.state.page = pageNum;
     this.setState({
@@ -153,19 +214,31 @@ class DataTable extends React.Component {
     this.fetch();
   }
 
-  changeSearchKeyword(e) {
+  /**
+   * Handle search keyword change
+   */
+  onSearchKeywordChanged(e) {
     this.setState({
       search: e.target.value,
     });
   }
 
+  /**
+   * Filter results
+   *
+   * @property {string}: property name used for filter
+   * @value {string}: value of the property that should only be shown
+   */
   filter(property, value) {
     if (property) {
+      // Construct the `filter` object
       if (value === undefined) {
         delete this.state.filter[property];
       } else {
         this.state.filter[property] = value;
       }
+
+      // Send filter request
       this.state.doneLoading = false;
       this.state.page = 1;
       this.forceUpdate();
@@ -173,6 +246,9 @@ class DataTable extends React.Component {
     }
   }
 
+  /**
+   * Render search box
+   */
   renderSearchbox() {
     let placeholder = 'Search...';
     if (this.dataSource.entity.searchFields) {
@@ -185,8 +261,8 @@ class DataTable extends React.Component {
                className="form-control"
                placeholder={placeholder}
                value={this.state.search}
-               onChange={this.changeSearchKeyword.bind(this)}
-               onKeyPress={this.onKeyDown.bind(this)}/>
+               onChange={this.onSearchKeywordChanged.bind(this)}
+               onKeyPress={this.onSearchBoxKeydown.bind(this)}/>
         <span className="input-group-btn">
           <button className="btn btn-primary btn-block" onClick={this.search.bind(this)}>
             <i className="fa fa-search"/>
@@ -196,6 +272,9 @@ class DataTable extends React.Component {
     );
   }
 
+  /**
+   * Render pagination
+   */
   renderPaging() {
     const pageElements = [];
 
@@ -285,12 +364,13 @@ class DataTable extends React.Component {
       );
     });
 
-    // Generate header, including sort, filter button if needed
+    // Generate header row, including sort, filter button if needed
     const headings = fields.map((row, index) => {
       const heading = row[0];
       const property = typeof row[1] === 'string' ? row[1] : row[1].field;
       const propertySortable = row[2] === undefined;
       const propertyFilterable = row[3] !== undefined;
+
       // Show sort icon if the list is defined as sortable and current field is sortable
       const sortable = this.props.sortable && propertySortable;
       let sortIcon;
@@ -303,8 +383,8 @@ class DataTable extends React.Component {
         }
       }
 
+      // Render filter icons
       let filterIcon;
-
       if (propertyFilterable) {
         const filterItems = row[3].map((value) => {
           return (
@@ -391,6 +471,17 @@ class DataTable extends React.Component {
     );
   }
 }
+
+// Property types
+DataTable.propTypes = {
+    id: React.PropTypes.string.isRequired,
+    dataSource: React.PropTypes.object.isRequired,
+    perpage: React.PropTypes.number,
+    query: React.PropTypes.string,
+    onQueryChange: React.PropTypes.func,
+    sortable: React.PropTypes.bool,
+    searchable: React.PropTypes.bool
+};
 
 DataTable.DataSource = DataSource;
 export default DataTable;
